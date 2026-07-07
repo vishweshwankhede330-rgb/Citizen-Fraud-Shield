@@ -1,0 +1,35 @@
+Build a frontend-only web app called "Citizen Fraud Shield" — a citizen-facing tool that lets people check if a message, call, or WhatsApp text they received is a digital arrest scam or fraud attempt.
+
+SCOPE: UI/UX only for now. No backend logic, no real AI calls yet — use placeholder/mock data and dummy verdict responses so the interface is fully clickable and demo-able.
+
+PAGES/SCREENS NEEDED:
+
+1. Landing/Home page
+- Headline explaining the tool ("Check if that call or message is a scam — in seconds")
+- A large call-to-action button to start a check
+- A short trust-building section with a warning banner stat ("₹1,776 crore lost to digital arrest scams in 2024")
+
+2. Check/Input screen
+- A text area where the user pastes a suspicious message, call transcript, or describes what happened
+- An optional "upload screenshot" file input (UI only, no processing needed yet)
+- A prominent "Analyze" button
+
+3. Result/Verdict screen
+- A mock verdict with a risk badge: "High Risk — Likely Scam" (red) / "Low Risk" (green) / "Uncertain" (amber)
+- A confidence percentage
+- A short explanation list (e.g., "Matches known digital arrest scam pattern: impersonation of law enforcement + urgency + payment demand")
+- Clear next-step action buttons: "Report to NCRB", "Block this number", "Share with a family member"
+
+4. Dashboard/History screen (simple)
+- A table or card list of past checks with timestamp, risk level, and a "view details" link
+- Use dummy sample data
+
+DESIGN DIRECTION:
+- Tone: trustworthy, calm, authoritative — this is a safety tool, not flashy tech. Avoid neon colors, avoid gimmicky animations.
+- Color palette: deep blue or navy as primary (trust, government/safety association), with red/amber/green reserved only for risk-level indicators
+- Clean sans-serif typography, generous whitespace, mobile-first responsive layout since most users will access this on phones
+- Include a simple top navbar with the tool name/logo placeholder and a "How it works" link
+
+TECH STACK: plain HTML/CSS/JS (or React if you prefer, whichever renders faster and more reliably in Replit's preview). Keep it a single cohesive front-end app, no external backend calls yet.
+
+IMPORTANT — SCOPE LIMITING: Do not modify or restructure anything outside these 4 screens. Do not add authentication, payments, or backend database logic at this stage — this is UI scaffolding only, functionality comes later.

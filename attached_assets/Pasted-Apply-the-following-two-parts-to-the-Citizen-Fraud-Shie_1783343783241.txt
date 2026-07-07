@@ -1,0 +1,40 @@
+Apply the following two parts to the Citizen Fraud Shield app. Apply Part 1 first, confirm it works, then apply Part 2 in stages as described — do not skip the incremental testing.
+
+===========================================
+PART 1 — FIX: POLICE STATION MISMATCH BUG
+===========================================
+
+There is a bug: the "Nearby Police Stations" section on the live Result screen (shown immediately after submitting a check) says "No listed stations found" for a given pincode, but when the SAME complaint is later viewed through the History page, it correctly shows real nearby police stations.
+
+Please investigate and fix this:
+1. Check whether the live Result screen and the History detail view use the same pincode-to-coordinates lookup and the same Overpass API query logic, or if there are two separate implementations behaving differently
+2. Check for a timing/race condition: is the Overpass API call firing before the pincode-to-coordinates lookup finishes resolving on the live Result screen? Log the coordinates used at query time on both views so we can compare
+3. Check if the live Result screen has a shorter timeout or fails silently if the Overpass response takes slightly longer, falling back to "No listed stations found" incorrectly
+4. If the query fires before coordinates are ready, or times out too early, add a proper loading state ("Searching for nearby stations...") while in progress, and only show "No listed stations found" if the completed query genuinely returns zero results
+5. Test with pincode 440013 on a fresh submission (not from History) and confirm real stations now appear immediately, matching the History view
+
+===========================================
+PART 2 — VISUAL DESIGN UPGRADE (apply in stages, confirm each stage before continuing)
+===========================================
+
+The current design feels too plain and flat (mostly white background, little visual depth) and doesn't feel trustworthy or professional enough. Improve this WITHOUT changing layout structure, navigation, or any functionality — this is a visual depth and polish pass only.
+
+STAGE A — Background and depth (apply first, confirm rendering before Stage B):
+- Replace the flat white/plain background with a very subtle warm off-white (#F7F6F3) as the page background, and pure white (#FFFFFF) for card surfaces — this creates visible layering instead of everything being one flat color
+- Add soft, subtle shadows to cards (not harsh drop-shadows) — e.g., a soft 0 2px 8px rgba(0,0,0,0.06) shadow — so cards feel lifted off the page instead of flat bordered boxes
+- Add a subtle gradient to the top navbar and hero section only (e.g., a very slight navy-to-slightly-lighter-navy gradient), not applied elsewhere
+
+STAGE B — Visual hierarchy and trust signals (apply after confirming Stage A):
+- On the Landing page hero section, add a small row of trust indicators below the main heading — e.g., simple stat badges like "Powered by AI" / "Free to Use" / "Instant Results" as small pill-shaped tags with icons
+- Increase the visual weight of section headings (slightly larger size, semibold weight) so pages feel more structured and less flat
+- Add subtle icon accents (thin-stroke, single accent color, consistent with the existing icon set already used) next to key section headings across the app — Result screen, Dashboard, Police Dashboard — so each major section has a small recognizable visual anchor
+
+STAGE C — Color accents (apply after confirming Stage B):
+- Introduce ONE additional accent color beyond the current primary navy — a muted teal or steel-blue (#3D7A8A or similar) — used sparingly for secondary buttons, links, and small highlight elements, so the app doesn't feel monochrome
+- Keep risk badge colors (red/amber/green) exactly as they are — do not touch those systems
+
+IMPORTANT — SCOPE LIMITING (applies to Part 2 entirely):
+- Do not change page structure, navigation, or any existing functionality (Speech AI, Agentic flow, Nearby Police Stations, Fraud Hotspot Map, Police Dashboard, reporting section)
+- Do not introduce more than the one new accent color specified
+- Do not change fonts unless explicitly instructed here — keep the current font family
+- Apply Stage A, B, and C one at a time and confirm each renders correctly before moving to the next — do not apply all three simultaneously

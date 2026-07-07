@@ -1,0 +1,29 @@
+Redesign the visual styling of "Citizen Fraud Shield" with a specific, deliberate design direction — this is a style-only pass, do not change page structure, navigation, or functionality.
+
+DESIGN DIRECTION: "Official Public Notice" — inspired by government gazettes, RBI circulars, and formal legal documents, NOT a typical tech startup or SaaS look.
+
+COLOR PALETTE (use exactly these):
+- Background: #F7F6F3 (warm paper white)
+- Primary text/ink: #1C2B39 (deep slate-navy)
+- Accent (links, primary buttons only): #8A6D3B (muted bronze/gold)
+- Risk badges ONLY: High Risk #B3261E, Uncertain #946800, Low Risk #2D6A4F — desaturated tones, not bright/neon
+- Remove any gradients, bright blues, or saturated colors currently in use
+
+TYPOGRAPHY:
+- Headings: "Source Serif 4" (or "Newsreader" as fallback) — import from Google Fonts
+- Body text: "IBM Plex Sans" — import from Google Fonts
+- Section labels/eyebrows (small category tags above headings) should use small caps with wide letter-spacing (e.g., letter-spacing: 0.08em, text-transform: uppercase, font-size: 0.75rem)
+
+LAYOUT AND VISUAL STYLE:
+- Replace any card shadows with thin 1px solid hairline borders (color: a subtle grey like #D9D5CC) instead — no drop shadows anywhere
+- Corner radius maximum 2px on all elements (buttons, inputs, cards) — avoid heavily rounded "bubbly" shapes
+- Buttons: solid fill for primary actions using the bronze accent, outline/ghost style for secondary actions — no gradient buttons
+- Increase padding/whitespace generously, especially around section breaks
+- Use horizontal hairline dividers (1px, #D9D5CC) between major sections instead of background color blocks to separate content
+- Remove any emoji or casual icon styles; if icons are used, they should be simple, thin-stroke outline icons only, used sparingly (not decoratively)
+
+TOP NAVBAR:
+- Keep it minimal: wordmark on the left using the serif heading font, nav links on the right in the sans body font, small caps, wide letter-spacing
+- Background should match the page background (#F7F6F3) with a single 1px bottom border, not a solid navy block
+
+IMPORTANT — SCOPE LIMITING: This is a styling-only pass. Do not change page structure, content, navigation flow, or any existing functionality (Speech AI, Agentic flow, reporting section, map, etc.). Apply consistently across Landing, Check/Input, Result, and Dashboard screens.

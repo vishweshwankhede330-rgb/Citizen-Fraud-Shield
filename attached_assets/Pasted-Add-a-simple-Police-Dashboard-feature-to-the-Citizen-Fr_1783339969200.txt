@@ -1,0 +1,22 @@
+Add a simple "Police Dashboard" feature to the Citizen Fraud Shield app. This is a new, separate feature — do not modify the existing Check/Input flow, Result screen, Speech AI, Agentic flow, Fraud Hotspot Map, or Nearby Police Stations sections.
+
+1. SHARED COMPLAINTS DATABASE
+- When a user gets a High Risk result and is on the Result screen, add a button "Submit Complaint to Police Dashboard"
+- On click, save this complaint to a shared, persistent database (not just browser-local storage) with: submitted message/transcript text, risk_level, crime category, city, pincode, timestamp, and a unique complaint ID
+- Show a confirmation message after submitting: "Your complaint has been submitted. Complaint ID: [ID]"
+
+2. CITIZEN'S "MY COMPLAINTS" VIEW
+- Add a simple new page/tab "My Complaints" (accessible from the main navbar) showing all complaints THIS user has submitted (matched by browser session), with their complaint ID, category, risk level, city, and timestamp
+- Keep this simple — a list or table, no editing needed
+
+3. POLICE DASHBOARD (ACCESS-CODE PROTECTED)
+- Add a new page at a distinct route (e.g., /police-dashboard)
+- On visiting this page, show a simple access code entry screen: a text input asking for "Police Access Code" with a Submit button
+- Set the correct access code as an environment secret called POLICE_ACCESS_CODE (I will set this value myself in Replit Secrets)
+- If the entered code is correct, show the full Police Dashboard: a table of ALL submitted complaints (from all users), showing complaint ID, submitted message, risk_level, crime category, city, pincode, and timestamp — sorted by most recent first
+- If the code is incorrect, show an error message and do not reveal any complaint data
+- Add a simple "Logout" or "Exit Dashboard" link to return to the access code screen
+
+DESIGN: Match the existing design system (colors, fonts, card style) already used across the app. The Police Dashboard can use a slightly more formal/table-based layout since it's meant for internal use, but should still stay visually consistent (same navy/trust color palette, same fonts).
+
+IMPORTANT — SCOPE LIMITING: Do not add real user authentication or accounts — this is a single shared access code only, as an environment secret. Do not modify any existing feature outside what's described above. This is a new addition on top of the current app.

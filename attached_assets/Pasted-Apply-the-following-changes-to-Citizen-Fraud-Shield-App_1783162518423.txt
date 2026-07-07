@@ -1,0 +1,63 @@
+Apply the following changes to "Citizen Fraud Shield." Apply Part 1 first and confirm it renders correctly across all screens before moving to Part 2, then confirm before applying Part 3. Do not restructure page layout, navigation, or any existing functionality (Speech AI, Agentic flow, reporting section, map, backend/API logic).
+
+===========================================
+PART 1 — TRUSTWORTHY VISUAL STYLE
+===========================================
+
+Fonts:
+- Import "IBM Plex Sans" from Google Fonts for ALL text (headings and body) — use one font family throughout, do not mix in a serif font
+- Heading weight: 600 (semibold), Body weight: 400 (regular)
+- Type scale: page titles 28px, section headings 20px, body text 16px, small labels 13px
+
+Colors (use exactly these, nothing else):
+- Page background: #F7F6F3
+- Card/section background: #FFFFFF
+- Primary text: #1C2B39
+- Secondary/muted text: #5B6B7A
+- Primary button/accent: #2C4A6B (calm, muted navy-blue, not bright)
+- Borders/dividers: #E0DED8
+- Risk badges only: High Risk background #FDECEA text #B3261E, Uncertain background #FFF4E0 text #946800, Low Risk background #E8F3EC text #2D6A4F
+
+Layout:
+- Cards: white background, 1px solid border in #E0DED8, 6px corner radius, no drop shadows
+- Buttons: solid fill using the primary accent color, 6px corner radius, no gradients
+- Consistent padding: 24px inside cards, 16px between stacked elements
+- Top navbar: page-background color, 1px bottom border, wordmark on left, nav links on right
+
+Do NOT: use multiple font families, use drop shadows, use bright/neon colors, use heavy rounded "bubble" shapes, remove any existing icons or content.
+
+===========================================
+PART 2 — "HOW IT WORKS" SECTION FOR NEW USERS (WITH ICONS)
+===========================================
+
+Add a simple section on the Landing page (above or below the existing hero) with 4 numbered steps explaining how to use the app for a first-time user:
+1. Paste a message, or upload/record a call — describe what happened
+2. Answer a couple of quick follow-up questions if asked
+3. Get an instant risk verdict with a plain-language explanation
+4. If it's high risk, report it immediately using the provided links
+
+Display as 4 small cards or a horizontal/vertical numbered list, using the existing design system (colors/fonts from Part 1).
+
+Icons for each step:
+- Use a simple, consistent outline-style icon set (e.g., Lucide icons or Feather icons — thin stroke, no filled/solid icons, no colorful illustrations)
+- Icon per step: 1) message-square or mic icon, 2) message-circle-question or help-circle icon, 3) shield-check or shield-alert icon, 4) flag or send icon
+- Icon size: consistent, 24-28px, same stroke width across all four
+- Icon color: primary accent color (#2C4A6B) only — no multiple colors per icon, no filled backgrounds unless a single subtle neutral circle (#F7F6F3, no border)
+- Icons are purely functional — one per step, no decoration, no animation
+
+===========================================
+PART 3 — CHAT-STYLE UI FOR CHECK/FOLLOW-UP FLOW
+===========================================
+
+Restyle the Check/Input and Agentic Follow-up flow as a chat conversation, keeping all existing logic and API calls unchanged:
+- AI messages (prompts, follow-up questions, final verdict) as bubbles aligned left, background #FFFFFF with #E0DED8 border
+- User messages (their input, their answers) as bubbles aligned right, background #2C4A6B with white text
+- A single input bar fixed at the bottom with a text field, a mic/audio icon button, and a send button — combine text and audio input into this one bar instead of separate tabs
+- New messages append to the conversation (don't replace previous ones) so the full exchange is visible
+- Show a simple "..." typing indicator while waiting for the AI's response
+- When the final verdict arrives, show it as a slightly larger, clearly distinct AI bubble containing the risk badge, confidence, reasons, and explanation — with the Report/NCRB/1930 section appearing directly below it when risk is High
+
+===========================================
+IMPORTANT — SCOPE LIMITING (applies to all parts)
+===========================================
+Do not change the Dashboard, map, or any backend/API logic at any point. Do not introduce colors, fonts, or icon styles beyond what's specified above. Confirm each part renders correctly before proceeding to the next.

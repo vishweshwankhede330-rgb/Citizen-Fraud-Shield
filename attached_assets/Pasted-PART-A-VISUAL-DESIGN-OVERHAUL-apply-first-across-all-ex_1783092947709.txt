@@ -1,0 +1,62 @@
+PART A — VISUAL DESIGN OVERHAUL (apply first, across all existing screens)
+
+Redesign the visual style of "Citizen Fraud Shield" to feel authoritative, trustworthy, and professional — closer to a government/public-safety platform or a serious fintech security product, not a generic startup app. This is a redesign of styling only — do not change page structure, content, or functionality.
+
+Typography:
+- Use a professional, highly legible sans-serif font pairing (e.g., a strong geometric sans for headings like "Inter" or "IBM Plex Sans", paired with a clean readable body font)
+- Avoid playful, rounded, or casual fonts entirely
+- Use clear typographic hierarchy: large confident headings, generous line-height on body text, consistent sizing scale
+
+Color palette:
+- Primary: deep navy or indigo (#0F1F3D range) — conveys trust, authority, government association
+- Secondary/accent: a single restrained accent color (e.g., a muted teal or steel blue) for buttons and links
+- Risk indicators only: red (high risk), amber (uncertain), green (low risk) — used sparingly, only for verdict badges, nowhere else
+- Neutral backgrounds: off-white or very light grey, not pure white, for a calmer, more premium feel
+- Remove any bright, saturated, or "playful" colors currently in use
+
+Layout and spacing:
+- Increase whitespace/padding throughout — cramped layouts feel less trustworthy
+- Use subtle borders, soft shadows, and card-based layouts instead of flat blocks or bright fills
+- Ensure consistent alignment and spacing grid across all screens
+- Add a clean, minimal top navbar with a simple wordmark/logo placeholder, consistent across every screen
+
+Visual details that build trust:
+- Add subtle security/safety visual cues where appropriate (e.g., a shield icon, lock icon, checkmark icon) used minimally, not decoratively
+- Avoid emojis, casual illustrations, or cartoonish icon sets — use a clean icon set (e.g., outline-style icons, consistent stroke width)
+- Buttons should look solid and deliberate — clear primary/secondary button hierarchy, no overly rounded "bubbly" buttons
+
+Mobile responsiveness:
+- Ensure all screens remain clean and readable on mobile, since most users will access this on phones
+
+IMPORTANT: This is a style-only pass. Do not change any existing page structure, navigation flow, or remove/add functional elements — only update typography, color, spacing, and visual polish across the Landing, Check/Input, Result, and Dashboard screens.
+
+---
+
+PART B — NEW FEATURES (apply after the design pass, using the new visual style)
+
+1. PLAIN-LANGUAGE EXPLANATION PANEL
+- On the Result/Verdict screen, below the existing risk score/badge, add a simple, calm explanation section written in plain language (not technical), aimed at someone who may be scared or panicking
+- Example tone: "This is very likely NOT real police or government. Real officials never ask for money over a call or video call. It is safe to hang up now."
+- Update the classification response to include a "simple_explanation" field (1-2 short sentences, plain language, reassuring but clear) alongside the existing risk_level, confidence, and reasons fields
+
+2. VERIFIED REPORTING SECTION
+- On the Result screen, when risk_level is "High", add a clearly visible "Report This Scam" section with:
+  - A button labeled "Report to Cyber Crime Portal" that opens https://cybercrime.gov.in in a new tab
+  - A prominent display of India's national cyber fraud helpline number: 1930, with a short note: "Call 1930 immediately if you have already shared money or bank details — this can help freeze the transaction."
+
+3. SPEECH-TO-TEXT INPUT (Speech AI)
+- On the Check/Input screen, add an option to upload an audio file (mp3/wav/m4a) or record audio directly in-browser, as an alternative to typing/pasting text
+- Send the uploaded audio to Groq's Whisper-based transcription API (whisper-large-v3-turbo or similar) to convert it to text
+- Show the transcribed text back to the user in an editable text box before analysis, so they can correct any transcription errors
+- Once confirmed, feed this transcribed text into the classification flow exactly as if it were typed
+
+4. AGENTIC FOLLOW-UP FLOW (Agentic AI)
+- Modify the classification flow so that instead of always giving an immediate final verdict, the AI first evaluates whether the input has enough information to confidently classify it
+- If confidence is low or the case is ambiguous, the AI should generate 1-2 short, relevant follow-up questions (e.g., "Did the caller ask you to stay on a video call?", "Did they request an OTP or bank details?", "Did they mention a case number or badge number?")
+- Show these follow-up questions to the user in the UI, let them answer (simple yes/no or short text), then send the original input plus their answers back to the AI for a final verdict
+- If the AI is already confident from the first input alone, skip straight to the final verdict — the follow-up step should only trigger when genuinely needed
+- Update the system prompt so the AI internally reasons in two possible modes: "need_more_info" (returns follow-up questions) or "final_verdict" (returns risk_level, confidence, reasons, simple_explanation)
+
+FLOW SUMMARY: Check/Input screen (text OR audio upload, audio gets transcribed first) → Agentic evaluation (either asks 1-2 follow-up questions OR goes straight to verdict) → Result screen (risk badge + simple_explanation + reasons + NCRB/1930 reporting section if High risk)
+
+IMPORTANT — SCOPE LIMITING: Do not modify the Landing page structure or Dashboard structure beyond the new visual style. Do not add features beyond the four described above. Do not add authentication or payments.

@@ -1,0 +1,257 @@
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+export type RiskLevel = "High Risk" | "Low Risk" | "Uncertain";
+
+export type City =
+  | "Mumbai"
+  | "Delhi"
+  | "Bengaluru"
+  | "Nagpur"
+  | "Pune"
+  | "Hyderabad"
+  | "Chennai"
+  | "Kolkata"
+  | "Ahmedabad"
+  | "Jaipur"
+  | "Other";
+
+export const CITY_LIST: City[] = [
+  "Mumbai", "Delhi", "Bengaluru", "Nagpur", "Pune",
+  "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur", "Other",
+];
+
+export const CITY_COORDS: Record<City, [number, number]> = {
+  Mumbai:    [19.076,  72.8777],
+  Delhi:     [28.7041, 77.1025],
+  Bengaluru: [12.9716, 77.5946],
+  Nagpur:    [21.1458, 79.0882],
+  Pune:      [18.5204, 73.8567],
+  Hyderabad: [17.385,  78.4867],
+  Chennai:   [13.0827, 80.2707],
+  Kolkata:   [22.5726, 88.3639],
+  Ahmedabad: [23.0225, 72.5714],
+  Jaipur:    [26.9124, 75.7873],
+  Other:     [22.5,    82.0],
+};
+
+export interface CheckResult {
+  id: string;
+  timestamp: string;
+  query: string;
+  riskLevel: RiskLevel;
+  confidenceScore: number;
+  reasons: string[];
+  recommendedActions?: string[];
+  simpleExplanation?: string;
+  city?: City;
+  crimeCategory?: string;
+  pincode?: string;
+}
+
+interface StoreContextType {
+  history: CheckResult[];
+  addCheck: (check: Omit<CheckResult, "id" | "timestamp">) => string;
+  getCheck: (id: string) => CheckResult | undefined;
+}
+
+const StoreContext = createContext<StoreContextType | undefined>(undefined);
+
+const DUMMY_DATA: CheckResult[] = [
+  {
+    id: "1",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+    query: "Call from Customs Department about a package containing illegal items.",
+    riskLevel: "High Risk",
+    confidenceScore: 98,
+    city: "Mumbai",
+    simpleExplanation: "This is almost certainly a scam. Real customs officials never call individuals about seized packages and demand payment over the phone.",
+    reasons: [
+      "Mentions 'Customs Department' making a direct call, a common impersonation tactic.",
+      "Threatens legal action regarding 'illegal items' in a package.",
+      "Urgency and intimidation used to bypass critical thinking."
+    ]
+  },
+  {
+    id: "2",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    query: "Message from bank saying my account will be suspended if I don't click the link.",
+    riskLevel: "High Risk",
+    confidenceScore: 95,
+    city: "Delhi",
+    simpleExplanation: "This is a phishing scam. Your bank will never ask you to click an unverified link to prevent account suspension. Do not click anything.",
+    reasons: [
+      "Creates artificial urgency ('account will be suspended').",
+      "Requests clicking an unverified link to resolve the issue.",
+      "Banks typically do not communicate account suspensions via informal links."
+    ]
+  },
+  {
+    id: "3",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+    query: "Reminder for my dental appointment tomorrow at 10 AM.",
+    riskLevel: "Low Risk",
+    confidenceScore: 99,
+    city: "Pune",
+    simpleExplanation: "This looks like a legitimate appointment reminder. There are no signs of fraud in this message.",
+    reasons: [
+      "Standard transactional communication format.",
+      "No requests for personal information or urgent financial action.",
+      "Matches typical service provider reminder patterns."
+    ]
+  },
+  {
+    id: "h1",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+    query: "CBI officer called saying my Aadhaar is linked to a money laundering case.",
+    riskLevel: "High Risk", confidenceScore: 97, city: "Mumbai",
+    simpleExplanation: "This is a scam. The CBI does not call citizens about Aadhaar-linked cases. You can safely hang up.",
+    reasons: ["CBI impersonation", "Aadhaar theft attempt", "Money laundering false threat"]
+  },
+  {
+    id: "h2",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 80).toISOString(),
+    query: "TRAI officer said my number will be disconnected for illegal activity. Stay on video call.",
+    riskLevel: "High Risk", confidenceScore: 96, city: "Delhi",
+    simpleExplanation: "This is a digital arrest scam. TRAI does not make such calls. The 'stay on video call' instruction is a known scam tactic — hang up immediately.",
+    reasons: ["TRAI impersonation", "Video call isolation tactic", "Illegal activity false threat"]
+  },
+  {
+    id: "h3",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 90).toISOString(),
+    query: "Narcotics department arrested someone with your SIM. Transfer money to a safe account now.",
+    riskLevel: "High Risk", confidenceScore: 99, city: "Bengaluru",
+    reasons: ["Narcotics impersonation", "Safe account payment demand", "SIM association scam"]
+  },
+  {
+    id: "h4",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 100).toISOString(),
+    query: "ED officer says your PAN is frozen due to financial crime. Pay Rs 50,000 immediately.",
+    riskLevel: "High Risk", confidenceScore: 98, city: "Mumbai",
+    reasons: ["ED impersonation", "PAN freeze threat", "Immediate payment demand"]
+  },
+  {
+    id: "h5",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 110).toISOString(),
+    query: "Your parcel from FedEx has illegal items. Customs officer will arrest you unless you pay.",
+    riskLevel: "High Risk", confidenceScore: 95, city: "Hyderabad",
+    reasons: ["Parcel scam variant", "Customs impersonation", "Arrest threat with payment demand"]
+  },
+  {
+    id: "h6",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 120).toISOString(),
+    query: "Police FIR registered against your mobile number. Call back to avoid arrest warrant.",
+    riskLevel: "High Risk", confidenceScore: 94, city: "Chennai",
+    reasons: ["Police impersonation", "Fake FIR threat", "Callback to scammer tactic"]
+  },
+  {
+    id: "h7",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 130).toISOString(),
+    query: "RBI verification officer. Your account has suspicious transactions. Share OTP to unfreeze.",
+    riskLevel: "High Risk", confidenceScore: 97, city: "Kolkata",
+    reasons: ["RBI impersonation", "OTP theft attempt", "Suspicious transaction false alert"]
+  },
+  {
+    id: "h8",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 140).toISOString(),
+    query: "Supreme Court case number 2847 filed against you. Pay fine online to avoid jail.",
+    riskLevel: "High Risk", confidenceScore: 96, city: "Delhi",
+    reasons: ["Fake court case number", "Judiciary impersonation", "Payment to avoid jail threat"]
+  },
+  {
+    id: "h9",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 150).toISOString(),
+    query: "Your electricity bill is overdue. Connection will be cut in 2 hours unless you pay now.",
+    riskLevel: "Uncertain", confidenceScore: 72, city: "Pune",
+    reasons: ["Artificial urgency", "Unusual payment request", "Verify with official electricity provider"]
+  },
+  {
+    id: "h10",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 160).toISOString(),
+    query: "CBI digital arrest. Do not disconnect this call or leave your home. We are monitoring you.",
+    riskLevel: "High Risk", confidenceScore: 99, city: "Ahmedabad",
+    reasons: ["Explicit 'digital arrest' phrase", "CBI impersonation", "Isolation and monitoring threat"]
+  },
+  {
+    id: "h11",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 170).toISOString(),
+    query: "Income Tax officer. You have undisclosed income. Pay penalty to avoid criminal charges.",
+    riskLevel: "High Risk", confidenceScore: 93, city: "Jaipur",
+    reasons: ["Income tax impersonation", "Undisclosed income false claim", "Criminal charge threat"]
+  },
+  {
+    id: "h12",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 180).toISOString(),
+    query: "We found your Aadhaar used in drug trafficking. Stay on WhatsApp video or you'll be arrested.",
+    riskLevel: "High Risk", confidenceScore: 98, city: "Nagpur",
+    reasons: ["Aadhaar fraud claim", "Drug trafficking false accusation", "Video isolation tactic"]
+  },
+  {
+    id: "h13",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 190).toISOString(),
+    query: "Your KYC is expiring. Click this link to update or your account will be blocked.",
+    riskLevel: "Uncertain", confidenceScore: 78, city: "Bengaluru",
+    reasons: ["KYC urgency tactic", "Suspicious link request", "Account blocking threat"]
+  },
+  {
+    id: "h14",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 200).toISOString(),
+    query: "Customs officer. Package seized with 2kg drugs in your name. Transfer Rs 1 lakh to clear.",
+    riskLevel: "High Risk", confidenceScore: 99, city: "Mumbai",
+    reasons: ["Customs impersonation", "Drug seizure false claim", "Large payment demand"]
+  },
+  {
+    id: "h15",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 210).toISOString(),
+    query: "Dr Sharma hospital appointment confirmed for tomorrow 11 AM. Please arrive 15 minutes early.",
+    riskLevel: "Low Risk", confidenceScore: 99, city: "Chennai",
+    reasons: ["Standard appointment reminder", "No payment or personal info requested", "Typical medical communication"]
+  },
+];
+
+export function StoreProvider({ children }: { children: React.ReactNode }) {
+  const [history, setHistory] = useState<CheckResult[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("cfs_history_v3");
+    if (saved) {
+      setHistory(JSON.parse(saved));
+    } else {
+      setHistory(DUMMY_DATA);
+      localStorage.setItem("cfs_history_v3", JSON.stringify(DUMMY_DATA));
+    }
+  }, []);
+
+  const addCheck = (check: Omit<CheckResult, "id" | "timestamp">) => {
+    const newCheck: CheckResult = {
+      ...check,
+      id: Math.random().toString(36).substring(2, 9),
+      timestamp: new Date().toISOString(),
+    };
+
+    setHistory((prev) => {
+      const updated = [newCheck, ...prev];
+      localStorage.setItem("cfs_history_v3", JSON.stringify(updated));
+      return updated;
+    });
+
+    return newCheck.id;
+  };
+
+  const getCheck = (id: string) => {
+    return history.find(c => c.id === id);
+  };
+
+  return (
+    <StoreContext.Provider value={{ history, addCheck, getCheck }}>
+      {children}
+    </StoreContext.Provider>
+  );
+}
+
+export function useStore() {
+  const context = useContext(StoreContext);
+  if (context === undefined) {
+    throw new Error("useStore must be used within a StoreProvider");
+  }
+  return context;
+}

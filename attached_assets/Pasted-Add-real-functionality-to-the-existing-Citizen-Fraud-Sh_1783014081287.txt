@@ -1,0 +1,39 @@
+Add real functionality to the existing "Citizen Fraud Shield" app. Keep all existing UI/UX exactly as-is — do not redesign or restructure any screens. Only add the backend logic described below.
+
+GOAL: Replace the mock verdict on the Result screen with a real AI-generated scam risk assessment, powered by the Groq API.
+
+BACKEND LOGIC NEEDED:
+
+1. Environment setup
+- Add a GROQ_API_KEY secret (I will paste in the key via Replit's Secrets manager — do not hardcode it)
+- Use the Groq API endpoint with a fast model (e.g., llama-3.1-8b-instant or llama-3.3-70b-versatile — pick based on speed vs accuracy tradeoff for a live demo)
+
+2. Classification endpoint
+- When the user submits text on the Check/Input screen, send it to a backend route (e.g., /api/analyze)
+- This route calls the Groq API with a system prompt that classifies the input against known digital arrest scam patterns, including:
+  - Impersonation of law enforcement/government (CBI, ED, Customs, police)
+  - Urgency and threat language (arrest, freezing accounts, legal action)
+  - Requests for money transfer, gift cards, or "verification" payments
+  - Requests to stay on video call / isolate the victim from others
+  - Fake case numbers, fake officer names/badge numbers, spoofed caller ID patterns
+  - Requests for OTP, banking details, or Aadhaar/PAN details
+
+3. Structured response
+- Prompt Groq to return ONLY valid JSON in this exact shape, nothing else:
+{
+  "risk_level": "High" | "Low" | "Uncertain",
+  "confidence": <number 0-100>,
+  "reasons": ["short reason 1", "short reason 2", "short reason 3"],
+  "recommended_actions": ["action 1", "action 2"]
+}
+- Parse this JSON on the backend and pass it to the existing Result screen — map risk_level to the existing red/amber/green badge styling that's already built
+
+4. Error handling
+- If the Groq API call fails or times out, show a graceful fallback message on the Result screen ("Unable to analyze right now, please try again") instead of breaking the UI
+- Add a simple loading state on the Analyze button while the API call is in progress
+
+5. History/Dashboard screen
+- Store each analyzed check (input text, risk_level, confidence, timestamp) in a simple in-memory array or lightweight local database (e.g., Replit DB or SQLite) — no need for a full production database
+- Replace the dummy data on the Dashboard screen with these real stored checks
+
+IMPORTANT — SCOPE LIMITING: Do not touch the Landing page or the visual design of any screen. Only add the logic described above, wired into the existing screens and components.

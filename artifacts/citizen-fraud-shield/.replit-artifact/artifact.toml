@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Citizen Fraud Shield"
+version = "1.0.0"
+id = "artifacts/citizen-fraud-shield"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25447
+
+[services.development]
+run = "pnpm --filter @workspace/citizen-fraud-shield run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/citizen-fraud-shield", "run", "build" ]
+publicDir = "artifacts/citizen-fraud-shield/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25447"
+BASE_PATH = "/"

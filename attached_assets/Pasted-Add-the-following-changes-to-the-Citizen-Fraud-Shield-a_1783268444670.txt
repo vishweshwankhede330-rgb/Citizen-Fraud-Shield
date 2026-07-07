@@ -1,0 +1,34 @@
+Add the following changes to the Citizen Fraud Shield app. Apply each part carefully and don't modify anything outside what's described below (Speech AI, Agentic flow, reporting section, Fraud Hotspot Map, City dropdown should all stay untouched otherwise).
+
+===========================================
+PART 1 — ADD MANDATORY PINCODE FIELD
+===========================================
+
+- Add a text input labeled "Your Pincode" (6-digit Indian PIN code), placed near the existing City dropdown on the Check/Input screen
+- Make this field required — block submission with a clear message like "Please enter your 6-digit pincode" if left empty or if it's not a valid 6-digit number
+- Keep the existing City dropdown exactly as it is — this pincode is an additional required field, not a replacement
+
+===========================================
+PART 2 — USE PINCODE FOR NEARBY POLICE STATIONS SEARCH
+===========================================
+
+- On the Result screen, update the "Nearby Police Stations" section to use the submitted pincode instead of the city's general center coordinates
+- Convert the pincode to approximate coordinates using a free pincode-to-lat/long lookup (e.g., India Post's pincode API or a static Indian pincode dataset/API that doesn't require a paid key)
+- Use those coordinates to query the Overpass API (amenity=police) within a 3-5km radius, centered on the pincode location instead of the whole city center
+- This should return more accurate, nearby results instead of a citywide search that may miss local stations
+- If no stations are found even with the pincode-based search, keep the existing fallback message: "No listed stations found — please use the Cyber Crime Portal link above, or dial 100 for local police."
+
+===========================================
+PART 3 — ADD GUIDANCE TEXT ABOVE THE STATION LIST
+===========================================
+
+- Add this guidance line directly below the section heading ("Nearby Police Stations near [city/pincode]"), before the map and station list:
+
+"You can also visit one of these nearby police stations in person to report this cybercrime. Bring any evidence you have (screenshots, call recordings, transaction details) if possible."
+
+- Match the existing text style used for other guidance/explanation text on the Result screen (same as the "What This Means for You" section)
+
+===========================================
+IMPORTANT — SCOPE LIMITING (applies to all parts)
+===========================================
+Do not remove or change the City dropdown — pincode is additional. Do not modify Speech AI, Agentic flow, the reporting section, or the Fraud Hotspot Map. Only touch the Check/Input screen (new pincode field) and the Result screen's Nearby Police Stations section (search logic + guidance text).
