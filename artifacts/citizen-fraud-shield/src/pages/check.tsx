@@ -18,7 +18,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useStore, CITY_LIST, type City, type RiskLevel } from "@/lib/store";
+import { useStore, type RiskLevel } from "@/lib/store";
+import CityAutocomplete from "@/components/CityAutocomplete";
 import NearbyPoliceStations from "@/components/NearbyPoliceStations";
 import { getSessionId } from "@/lib/session";
 
@@ -144,7 +145,7 @@ function VerdictBubble({
 }: {
   data: FinalVerdictData;
   savedId: string;
-  city?: City;
+  city?: string;
   pincode?: string;
   onNewCheck: () => void;
 }) {
@@ -472,7 +473,7 @@ export default function Check() {
     { id: "greeting", kind: "ai-greeting" },
   ]);
   const [inputText, setInputText] = useState("");
-  const [city, setCity] = useState<City | "">("");
+  const [city, setCity] = useState("");
   const [cityError, setCityError] = useState(false);
   const [pincode, setPincode] = useState("");
   const [pincodeError, setPincodeError] = useState(false);
@@ -578,7 +579,7 @@ export default function Check() {
       stopRecording();
       return;
     }
-    if (!city) {
+    if (!city.trim()) {
       setCityError(true);
       return;
     }
@@ -682,7 +683,7 @@ export default function Check() {
   const handleSend = () => {
     const text = inputText.trim();
     if (!text || isAnalyzing || followupState !== null) return;
-    if (!city) {
+    if (!city.trim()) {
       setCityError(true);
       return;
     }
@@ -699,7 +700,7 @@ export default function Check() {
 
   const handleFollowupSubmit = () => {
     if (!followupState || isAnalyzing) return;
-    if (!city) {
+    if (!city.trim()) {
       setCityError(true);
       return;
     }
@@ -838,26 +839,19 @@ export default function Check() {
             {/* City selector */}
             <div className="flex items-center gap-2">
               <MapPin className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" strokeWidth={1.5} />
-              <label className="text-xs text-muted-foreground flex-shrink-0" htmlFor="city-select">
+              <label className="text-xs text-muted-foreground flex-shrink-0" htmlFor="city-input">
                 Your city
               </label>
-              <select
-                id="city-select"
+              <CityAutocomplete
+                id="city-input"
                 value={city}
-                onChange={(e) => {
-                  setCity(e.target.value as City | "");
-                  if (e.target.value) setCityError(false);
+                onChange={(val) => {
+                  setCity(val);
+                  if (val.trim()) setCityError(false);
                 }}
                 disabled={isAnalyzing}
-                className={`text-xs text-foreground border rounded-lg px-2 py-1 bg-background focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 ${
-                  cityError ? "border-[#FF6B6B] ring-1 ring-[#FF6B6B]" : "border-border"
-                }`}
-              >
-                <option value="" disabled>Select your city</option>
-                {CITY_LIST.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+                hasError={cityError}
+              />
               {audioStatus === "transcribing" && (
                 <span className="ml-auto flex items-center gap-1.5 text-xs text-primary">
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -902,7 +896,7 @@ export default function Check() {
             {/* Validation errors */}
             {cityError && (
               <p className="text-xs text-[#FF6B6B] font-medium -mt-1">
-                Please select your city to continue.
+                Please enter your city to continue.
               </p>
             )}
             {pincodeError && (

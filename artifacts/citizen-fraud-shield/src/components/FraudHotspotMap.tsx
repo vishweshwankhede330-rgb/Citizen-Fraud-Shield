@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useStore, CITY_COORDS, CITY_LIST, type City } from "@/lib/store";
+import { useStore, CITY_COORDS } from "@/lib/store";
 
 const INDIA_BOUNDS: [[number, number], [number, number]] = [
   [4, 60],
@@ -9,7 +9,7 @@ const INDIA_BOUNDS: [[number, number], [number, number]] = [
 ];
 
 interface CityStats {
-  city: City;
+  city: string;
   coords: [number, number];
   total: number;
   highRisk: number;
@@ -29,7 +29,9 @@ export default function FraudHotspotMap() {
       if (check.riskLevel === "High Risk") counts[city].highRisk += 1;
     }
 
-    return CITY_LIST.filter((c) => counts[c])
+    // Only plot cities that have history entries AND known coordinates.
+    return Object.keys(counts)
+      .filter((city) => CITY_COORDS[city])
       .map((city) => ({
         city,
         coords: CITY_COORDS[city],

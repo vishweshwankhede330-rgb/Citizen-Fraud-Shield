@@ -2,37 +2,82 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 export type RiskLevel = "High Risk" | "Low Risk" | "Uncertain";
 
-export type City =
-  | "Mumbai"
-  | "Delhi"
-  | "Bengaluru"
-  | "Nagpur"
-  | "Pune"
-  | "Hyderabad"
-  | "Chennai"
-  | "Kolkata"
-  | "Ahmedabad"
-  | "Jaipur"
-  | "Other";
+// City is a free string — any typed or selected city name is valid.
+export type City = string;
 
-export const CITY_LIST: City[] = [
-  "Mumbai", "Delhi", "Bengaluru", "Nagpur", "Pune",
-  "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur", "Other",
-];
-
-export const CITY_COORDS: Record<City, [number, number]> = {
-  Mumbai:    [19.076,  72.8777],
-  Delhi:     [28.7041, 77.1025],
-  Bengaluru: [12.9716, 77.5946],
-  Nagpur:    [21.1458, 79.0882],
-  Pune:      [18.5204, 73.8567],
-  Hyderabad: [17.385,  78.4867],
-  Chennai:   [13.0827, 80.2707],
-  Kolkata:   [22.5726, 88.3639],
-  Ahmedabad: [23.0225, 72.5714],
-  Jaipur:    [26.9124, 75.7873],
-  Other:     [22.5,    82.0],
+export const CITY_COORDS: Record<string, [number, number]> = {
+  // Original cities
+  Mumbai:             [19.0760,  72.8777],
+  Delhi:              [28.7041,  77.1025],
+  Bengaluru:          [12.9716,  77.5946],
+  Nagpur:             [21.1458,  79.0882],
+  Pune:               [18.5204,  73.8567],
+  Hyderabad:          [17.3850,  78.4867],
+  Chennai:            [13.0827,  80.2707],
+  Kolkata:            [22.5726,  88.3639],
+  Ahmedabad:          [23.0225,  72.5714],
+  Jaipur:             [26.9124,  75.7873],
+  // State capitals & major cities
+  Agartala:           [23.8315,  91.2868],
+  Agra:               [27.1767,  78.0081],
+  Aizawl:             [23.7271,  92.7176],
+  Allahabad:          [25.4358,  81.8463],
+  Amritsar:           [31.6340,  74.8723],
+  Aurangabad:         [19.8762,  75.3433],
+  Bhopal:             [23.2599,  77.4126],
+  Bhubaneswar:        [20.2961,  85.8245],
+  Chandigarh:         [30.7333,  76.7794],
+  Coimbatore:         [11.0168,  76.9558],
+  Dehradun:           [30.3165,  78.0322],
+  Dhanbad:            [23.7957,  86.4304],
+  Faridabad:          [28.4089,  77.3178],
+  Gandhinagar:        [23.2156,  72.6369],
+  Ghaziabad:          [28.6692,  77.4538],
+  Guwahati:           [26.1445,  91.7362],
+  Gwalior:            [26.2183,  78.1828],
+  Howrah:             [22.5958,  88.2636],
+  Hubballi:           [15.3647,  75.1240],
+  Imphal:             [24.8170,  93.9368],
+  Indore:             [22.7196,  75.8577],
+  Itanagar:           [27.0844,  93.6053],
+  Jabalpur:           [23.1815,  79.9864],
+  Jodhpur:            [26.2389,  73.0243],
+  Kanpur:             [26.4499,  80.3319],
+  Kochi:              [ 9.9312,  76.2673],
+  Kohima:             [25.6701,  94.1077],
+  Kota:               [25.2138,  75.8648],
+  Lucknow:            [26.8467,  80.9462],
+  Ludhiana:           [30.9010,  75.8573],
+  Madurai:            [ 9.9252,  78.1198],
+  Meerut:             [28.9845,  77.7064],
+  Mysuru:             [12.2958,  76.6394],
+  Nashik:             [19.9975,  73.7898],
+  "Navi Mumbai":      [19.0330,  73.0297],
+  Panaji:             [15.4909,  73.8278],
+  Patna:              [25.5941,  85.1376],
+  "Port Blair":       [11.6234,  92.7265],
+  Prayagraj:          [25.4358,  81.8463],
+  Puducherry:         [11.9416,  79.8083],
+  Raipur:             [21.2514,  81.6296],
+  Rajkot:             [22.3039,  70.8022],
+  Ranchi:             [23.3441,  85.3096],
+  Shillong:           [25.5788,  91.8933],
+  Shimla:             [31.1048,  77.1734],
+  Solapur:            [17.6599,  75.9064],
+  Srinagar:           [34.0837,  74.7973],
+  Surat:              [21.1702,  72.8311],
+  Thane:              [19.2183,  72.9781],
+  Thiruvananthapuram: [ 8.5241,  76.9366],
+  Vadodara:           [22.3072,  73.1812],
+  Varanasi:           [25.3176,  82.9739],
+  Vijayawada:         [16.5062,  80.6480],
+  Visakhapatnam:      [17.6868,  83.2185],
 };
+
+// Alphabetically-sorted list of all cities with known coordinates.
+export const CITY_LIST: string[] = Object.keys(CITY_COORDS).sort((a, b) =>
+  a.localeCompare(b),
+);
 
 export interface CheckResult {
   id: string;

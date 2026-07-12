@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { CITY_COORDS, type City } from "@/lib/store";
+import { CITY_COORDS } from "@/lib/store";
 import { Navigation, MapPin } from "lucide-react";
 
 interface PoliceStation {
@@ -12,8 +12,11 @@ interface PoliceStation {
   address: string;
 }
 
+// Fallback to centre of India when the city has no known coordinates.
+const INDIA_CENTRE: [number, number] = [20.5937, 78.9629];
+
 interface NearbyPoliceStationsProps {
-  city: City;
+  city: string;
   pincode?: string;
 }
 
@@ -25,7 +28,7 @@ interface NearbyPoliceStationsProps {
  * empty results if the city centre happens to have no listed stations).
  */
 async function resolveCoords(
-  city: City,
+  city: string,
   pincode?: string,
   signal?: AbortSignal,
 ): Promise<[number, number]> {
@@ -49,7 +52,7 @@ async function resolveCoords(
       // For genuine network / parse failures, fall through to city coords.
     }
   }
-  return CITY_COORDS[city];
+  return CITY_COORDS[city] ?? INDIA_CENTRE;
 }
 
 export default function NearbyPoliceStations({
@@ -59,7 +62,7 @@ export default function NearbyPoliceStations({
   const [stations, setStations] = useState<PoliceStation[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
-  const [center, setCenter] = useState<[number, number]>(CITY_COORDS[city]);
+  const [center, setCenter] = useState<[number, number]>(CITY_COORDS[city] ?? INDIA_CENTRE);
 
   useEffect(() => {
     const controller = new AbortController();
