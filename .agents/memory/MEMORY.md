@@ -1,0 +1,1 @@
+- [DB migrations never run](db-migrations.md) — complaints table (and any future tables) must be created with `pnpm --filter @workspace/db run push` before the API can use them.
