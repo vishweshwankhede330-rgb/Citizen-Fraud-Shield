@@ -21,9 +21,9 @@ interface Complaint {
 }
 
 function getRiskBadgeClass(level: string) {
-  if (level === "High Risk") return "bg-[#FDECEA] text-[#B3261E] border-[#f5c6c4]";
-  if (level === "Low Risk") return "bg-[#E8F3EC] text-[#2D6A4F] border-[#a8c8b5]";
-  return "bg-[#FFF4E0] text-[#946800] border-[#f5de8a]";
+  if (level === "High Risk") return "bg-[#3A1418] text-[#FF6B6B] border-[#3A1418]";
+  if (level === "Low Risk") return "bg-[#10301F] text-[#4ADE80] border-[#10301F]";
+  return "bg-[#3A2E0F] text-[#FFC857] border-[#3A2E0F]";
 }
 
 export default function MyComplaints() {
@@ -47,7 +47,7 @@ export default function MyComplaints() {
     <div className="flex-1 max-w-4xl w-full mx-auto p-4 py-8 md:py-12 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-[28px] font-semibold text-foreground mb-1.5">
+        <h1 className="text-[30px] font-semibold text-foreground mb-1.5">
           My Complaints
         </h1>
         <p className="text-muted-foreground text-sm">
@@ -57,21 +57,21 @@ export default function MyComplaints() {
 
       {/* Loading */}
       {complaints === null && !error && (
-        <div className="bg-white border border-border rounded-lg p-8 text-center">
+        <div className="bg-card border border-border rounded-lg p-8 text-center">
           <p className="text-sm text-muted-foreground">Loading your complaints…</p>
         </div>
       )}
 
       {/* Error */}
       {error && (
-        <div className="bg-[#FDECEA] border border-[#f5c6c4] rounded-lg p-5">
-          <p className="text-sm text-[#B3261E] font-medium">{error}</p>
+        <div className="bg-[#3A1418] border border-[#3A1418] rounded-lg p-5">
+          <p className="text-sm text-[#FF6B6B] font-medium">{error}</p>
         </div>
       )}
 
       {/* Empty state */}
       {complaints !== null && complaints.length === 0 && (
-        <div className="bg-white border border-border rounded-lg p-12 text-center">
+        <div className="bg-card border border-border rounded-lg p-12 text-center">
           <div className="flex justify-center mb-4">
             <div className="w-14 h-14 bg-background border border-border rounded-lg flex items-center justify-center">
               <ClipboardList className="h-7 w-7 text-muted-foreground" strokeWidth={1.5} />
@@ -94,7 +94,7 @@ export default function MyComplaints() {
 
       {/* Complaints list */}
       {complaints !== null && complaints.length > 0 && (
-        <div className="bg-white border border-border rounded-lg overflow-hidden">
+        <div className="bg-card border border-border rounded-lg overflow-hidden">
           <ul className="divide-y divide-border">
             {complaints.map((c) => (
               <li key={c.id} className="px-5 py-4 space-y-2">

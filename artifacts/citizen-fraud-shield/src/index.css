@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -51,87 +51,56 @@
 }
 
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
-  --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0,0,0, .02);
-  --elevate-2: rgba(0,0,0, .04);
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+  --opaque-button-border-intensity: 8;
+  --elevate-1: rgba(255,255,255, .02);
+  --elevate-2: rgba(255,255,255, .04);
 
-  /* Page background — warm paper #F7F6F3 */
-  --background: 45 20% 96%;
-  /* Primary text — deep slate #1C2B39 */
-  --foreground: 209 34% 17%;
-  /* Border/divider — #E0DED8 */
-  --border: 47 11% 86%;
+  /* Page background — #0F1419 near-black navy */
+  --background: 213 25% 8%;
+  /* Primary text — #E8EAED off-white */
+  --foreground: 220 10% 92%;
+  /* Border/divider — #2A3648 */
+  --border: 216 26% 22%;
 
-  /* Cards are white, elevated from page background */
-  --card: 0 0% 100%;
-  --card-foreground: 209 34% 17%;
-  --card-border: 47 11% 86%;
+  /* Card background — #1A2332 dark slate */
+  --card: 214 32% 15%;
+  --card-foreground: 220 10% 92%;
+  --card-border: 216 26% 22%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 209 34% 17%;
-  --popover-border: 47 11% 86%;
+  --popover: 214 32% 15%;
+  --popover-foreground: 220 10% 92%;
+  --popover-border: 216 26% 22%;
 
-  /* Primary action — calm muted navy #2C4A6B */
-  --primary: 212 42% 30%;
-  --primary-foreground: 0 0% 100%;
+  /* Primary accent — #4A9EFF confident blue */
+  --primary: 211 100% 65%;
+  --primary-foreground: 213 25% 8%;
 
-  --secondary: 210 16% 93%;
-  --secondary-foreground: 209 34% 17%;
+  /* Secondary — #212D3F elevated card */
+  --secondary: 214 31% 19%;
+  --secondary-foreground: 220 10% 92%;
 
-  --muted: 210 16% 93%;
-  /* Secondary/muted text — #5B6B7A */
-  --muted-foreground: 209 15% 42%;
+  --muted: 214 31% 19%;
+  /* Muted text — #8B98A9 */
+  --muted-foreground: 213 12% 60%;
 
-  /* Accent = same navy */
-  --accent: 212 42% 30%;
-  --accent-foreground: 0 0% 100%;
+  /* Accent = primary blue */
+  --accent: 211 100% 65%;
+  --accent-foreground: 213 25% 8%;
 
-  /* Destructive = high-risk red #B3261E */
-  --destructive: 3 71% 41%;
-  --destructive-foreground: 0 0% 100%;
+  /* Destructive = high-risk red on dark bg */
+  --destructive: 0 100% 71%;
+  --destructive-foreground: 213 25% 8%;
 
-  --input: 47 11% 88%;
-  --ring: 212 42% 30%; /* navy focus ring */
+  --input: 216 26% 22%;
+  --ring: 211 100% 65%;
 
-  --app-font-sans: 'IBM Plex Sans', sans-serif;
+  --app-font-sans: 'Inter', sans-serif;
   --app-font-mono: Menlo, monospace;
 
-  /* 6px corner radius */
-  --radius: 0.375rem;
-}
-
-.dark {
-  --background: 209 34% 12%;
-  --foreground: 45 20% 95%;
-  --border: 209 20% 22%;
-
-  --card: 209 34% 14%;
-  --card-foreground: 45 20% 95%;
-  --card-border: 209 20% 22%;
-
-  --popover: 209 34% 14%;
-  --popover-foreground: 45 20% 95%;
-  --popover-border: 209 20% 22%;
-
-  --primary: 212 42% 50%;
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 209 20% 20%;
-  --secondary-foreground: 45 20% 95%;
-
-  --muted: 209 20% 20%;
-  --muted-foreground: 209 15% 60%;
-
-  --accent: 212 42% 50%;
-  --accent-foreground: 0 0% 100%;
-
-  --destructive: 3 71% 50%;
-  --destructive-foreground: 0 0% 100%;
-
-  --input: 209 20% 22%;
-  --ring: 212 42% 50%;
+  /* 8px corner radius */
+  --radius: 0.5rem;
 }
 
 @layer base {
@@ -140,35 +109,42 @@
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-size: 16px;
+    font-weight: 400;
   }
-  /* Unified sans-serif headings — IBM Plex Sans semibold */
+  /* Inter semibold headings */
   h1, h2, h3, h4, h5, h6 {
     @apply font-sans font-semibold tracking-tight;
+  }
+  /* Small labels get subtle tracking */
+  .label-sm {
+    font-size: 13px;
+    letter-spacing: 0.02em;
   }
 }
 
 @layer utilities {
-  /* Soft elevation shadow for card surfaces */
+  /* Depth shadow for dark card surfaces */
   .shadow-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
-  /* Teal accent — #3D7A8A — used sparingly for secondary elements */
+  /* Accent blue utilities (replaces old teal) */
   .text-teal {
-    color: #3D7A8A;
+    color: #4A9EFF;
   }
   .bg-teal {
-    background-color: #3D7A8A;
+    background-color: #4A9EFF;
   }
   .border-teal {
-    border-color: #3D7A8A;
+    border-color: #4A9EFF;
   }
   .hover\:text-teal:hover {
-    color: #3D7A8A;
+    color: #4A9EFF;
   }
   .bg-teal\/10 {
-    background-color: rgba(61, 122, 138, 0.10);
+    background-color: rgba(74, 158, 255, 0.10);
   }
   .text-teal\/80 {
-    color: rgba(61, 122, 138, 0.80);
+    color: rgba(74, 158, 255, 0.80);
   }
 }

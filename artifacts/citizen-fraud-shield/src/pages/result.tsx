@@ -36,33 +36,33 @@ export default function Result() {
     switch (level) {
       case "High Risk":
         return {
-          icon: <ShieldAlert className="h-12 w-12 text-[#B3261E]" strokeWidth={1.5} />,
-          bg: "bg-[#FDECEA]",
-          border: "border-[#f5c6c4]",
-          text: "text-[#B3261E]",
-          badge: "bg-[#FDECEA] text-[#B3261E] border border-[#f5c6c4]",
+          icon: <ShieldAlert className="h-12 w-12 text-[#FF6B6B]" strokeWidth={1.5} />,
+          bg: "bg-[#3A1418]",
+          border: "border-[#3A1418]",
+          text: "text-[#FF6B6B]",
+          badge: "bg-[#3A1418] text-[#FF6B6B] border border-[#3A1418]",
           title: "High Risk Detected",
           description:
             "This communication strongly matches known fraud patterns. Do not engage.",
         };
       case "Uncertain":
         return {
-          icon: <AlertTriangle className="h-12 w-12 text-[#946800]" strokeWidth={1.5} />,
-          bg: "bg-[#FFF4E0]",
-          border: "border-[#f5de8a]",
-          text: "text-[#946800]",
-          badge: "bg-[#FFF4E0] text-[#946800] border border-[#f5de8a]",
+          icon: <AlertTriangle className="h-12 w-12 text-[#FFC857]" strokeWidth={1.5} />,
+          bg: "bg-[#3A2E0F]",
+          border: "border-[#3A2E0F]",
+          text: "text-[#FFC857]",
+          badge: "bg-[#3A2E0F] text-[#FFC857] border border-[#3A2E0F]",
           title: "Exercise Caution",
           description:
             "This communication contains suspicious elements. Verify independently.",
         };
       case "Low Risk":
         return {
-          icon: <ShieldCheck className="h-12 w-12 text-[#2D6A4F]" strokeWidth={1.5} />,
-          bg: "bg-[#E8F3EC]",
-          border: "border-[#a8c8b5]",
-          text: "text-[#2D6A4F]",
-          badge: "bg-[#E8F3EC] text-[#2D6A4F] border border-[#a8c8b5]",
+          icon: <ShieldCheck className="h-12 w-12 text-[#4ADE80]" strokeWidth={1.5} />,
+          bg: "bg-[#10301F]",
+          border: "border-[#10301F]",
+          text: "text-[#4ADE80]",
+          badge: "bg-[#10301F] text-[#4ADE80] border border-[#10301F]",
           title: "Low Risk",
           description:
             "No significant fraud patterns detected, but always stay vigilant.",
@@ -105,7 +105,7 @@ export default function Result() {
           {/* Verdict card */}
           <div className={`rounded-lg border ${config.border} ${config.bg} p-7 text-center`}>
             <div className="flex justify-center mb-5">
-              <div className="bg-white rounded-lg p-3.5 border border-border">
+              <div className="bg-[#212D3F] rounded-lg p-3.5 border border-border">
                 {config.icon}
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function Result() {
                 Confidence: {check.confidenceScore}%
               </span>
               {check.crimeCategory && (
-                <span className="inline-block px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-muted-foreground border border-border">
+                <span className="inline-block px-3 py-1.5 rounded-lg text-xs font-medium bg-muted text-muted-foreground border border-border">
                   {check.crimeCategory}
                 </span>
               )}
@@ -129,9 +129,9 @@ export default function Result() {
 
           {/* Plain-language explanation */}
           {check.simpleExplanation && (
-            <div className="bg-white rounded-lg border border-border p-5">
+            <div className="bg-card rounded-lg border border-border p-5">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-8 h-8 rounded-lg border border-border bg-primary/8 flex items-center justify-center mt-0.5">
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg border border-border bg-primary/10 flex items-center justify-center mt-0.5">
                   <Info className="h-4 w-4 text-primary" strokeWidth={1.5} />
                 </div>
                 <div>
@@ -148,8 +148,8 @@ export default function Result() {
 
           {/* High-risk reporting section */}
           {isHighRisk && check.crimeCategory !== "Not a Recognized Scam Pattern" && (
-            <div className="rounded-lg border border-[#f5c6c4] bg-[#FDECEA] p-5 space-y-4">
-              <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#B3261E]">
+            <div className="rounded-lg border border-[#3A1418] bg-[#3A1418] p-5 space-y-4">
+              <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#FF6B6B]">
                 <AlertTriangle className="h-4 w-4 flex-shrink-0" strokeWidth={1.5} />
                 Report This Scam
               </h2>
@@ -158,22 +158,22 @@ export default function Result() {
                   href="https://cybercrime.gov.in/Webform/Crime_AuthoLogin.aspx?rnt=5"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 bg-white border border-[#f5c6c4] rounded-lg px-4 py-3 text-sm font-semibold text-[#B3261E] hover:bg-[#FDECEA] transition-colors"
+                  className="flex items-center gap-3 bg-[#212D3F] border border-[#3A1418] rounded-lg px-4 py-3 text-sm font-semibold text-[#FF6B6B] hover:bg-[#3A1418]/70 transition-colors"
                 >
                   <ExternalLink className="h-4 w-4 flex-shrink-0" strokeWidth={1.5} />
                   Report to Cyber Crime Portal (cybercrime.gov.in)
                 </a>
-                <div className="bg-white border border-[#f5c6c4] rounded-lg px-4 py-3 space-y-1">
+                <div className="bg-[#212D3F] border border-[#3A1418] rounded-lg px-4 py-3 space-y-1">
                   <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-[#B3261E] flex-shrink-0" strokeWidth={1.5} />
-                    <span className="text-sm font-bold text-[#B3261E]">
+                    <Phone className="h-4 w-4 text-[#FF6B6B] flex-shrink-0" strokeWidth={1.5} />
+                    <span className="text-sm font-bold text-[#FF6B6B]">
                       Call 1930
                     </span>
-                    <span className="text-xs bg-[#FDECEA] text-[#B3261E] px-2 py-0.5 rounded-lg font-medium">
+                    <span className="text-xs bg-[#3A1418] text-[#FF6B6B] px-2 py-0.5 rounded-lg font-medium">
                       National Cyber Fraud Helpline
                     </span>
                   </div>
-                  <p className="text-xs text-[#B3261E]/80 pl-6 leading-relaxed">
+                  <p className="text-xs text-[#FF6B6B]/80 pl-6 leading-relaxed">
                     Call 1930 immediately if you have already shared money or
                     bank details — this can help freeze the transaction.
                   </p>
@@ -184,9 +184,9 @@ export default function Result() {
 
           {/* Submit complaint to Police Dashboard */}
           {isHighRisk && (
-            <div className="bg-white rounded-lg border border-border p-5">
+            <div className="bg-card rounded-lg border border-border p-5">
               <h2 className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-1">
-                <Send className="h-4 w-4 flex-shrink-0 text-[#2C4A6B]" strokeWidth={1.5} />
+                <Send className="h-4 w-4 flex-shrink-0 text-[#4A9EFF]" strokeWidth={1.5} />
                 Submit to Police Dashboard
               </h2>
               <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
@@ -197,7 +197,7 @@ export default function Result() {
               {submitStatus === "idle" && (
                 <Button
                   size="sm"
-                  className="bg-[#2C4A6B] hover:bg-[#2C4A6B]/90 text-white rounded-lg text-xs"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
                   onClick={async () => {
                     setSubmitStatus("submitting");
                     setSubmitError(null);
@@ -236,14 +236,14 @@ export default function Result() {
               )}
 
               {submitStatus === "done" && (
-                <div className="flex items-start gap-2.5 bg-[#E8F3EC] border border-[#a8c8b5] rounded-lg px-4 py-3">
-                  <CheckCircle className="h-4 w-4 text-[#2D6A4F] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                <div className="flex items-start gap-2.5 bg-[#10301F] border border-[#10301F] rounded-lg px-4 py-3">
+                  <CheckCircle className="h-4 w-4 text-[#4ADE80] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                   <div>
-                    <p className="text-sm font-semibold text-[#2D6A4F] mb-0.5">
+                    <p className="text-sm font-semibold text-[#4ADE80] mb-0.5">
                       Complaint submitted successfully.
                     </p>
                     {complaintId && (
-                      <p className="text-xs text-[#2D6A4F]/80">
+                      <p className="text-xs text-[#4ADE80]/80">
                         Complaint ID:{" "}
                         <span className="font-mono font-semibold">
                           {complaintId.slice(0, 8).toUpperCase()}
@@ -256,7 +256,7 @@ export default function Result() {
 
               {submitStatus === "error" && (
                 <div className="space-y-2">
-                  <p className="text-xs text-[#B3261E] font-medium">{submitError}</p>
+                  <p className="text-xs text-[#FF6B6B] font-medium">{submitError}</p>
                   <Button
                     size="sm"
                     variant="outline"
@@ -276,7 +276,7 @@ export default function Result() {
           )}
 
           {/* Analysis reasons */}
-          <div className="bg-white rounded-lg border border-border p-5">
+          <div className="bg-card rounded-lg border border-border p-5">
             <h2 className="text-sm font-semibold text-muted-foreground mb-4 pb-3 border-b border-border">
               Analysis Details
             </h2>
@@ -295,7 +295,7 @@ export default function Result() {
           </div>
 
           {/* Submitted content */}
-          <div className="bg-white rounded-lg border border-border p-5">
+          <div className="bg-card rounded-lg border border-border p-5">
             <h3 className="text-[13px] font-semibold text-muted-foreground mb-3">
               Submitted Content
             </h3>
@@ -310,43 +310,43 @@ export default function Result() {
 
         {/* ── Action panel ──────────────────────────────────────── */}
         <div className="space-y-4">
-          <div className="bg-[#2C4A6B] text-white rounded-lg p-5">
-            <h2 className="text-[13px] font-semibold text-white/70 mb-4">
+          <div className="bg-card border border-border text-foreground rounded-lg p-5">
+            <h2 className="text-[13px] font-semibold text-muted-foreground mb-4">
               Recommended Actions
             </h2>
             <div className="space-y-2.5">
               {isHighRisk && (
-                <div className="flex items-center gap-3 bg-white/10 rounded-lg px-3.5 py-3">
-                  <PhoneForwarded className="h-4 w-4 text-[#f5a6a3] flex-shrink-0" strokeWidth={1.5} />
+                <div className="flex items-center gap-3 bg-[#3A1418] rounded-lg px-3.5 py-3">
+                  <PhoneForwarded className="h-4 w-4 text-[#FF6B6B] flex-shrink-0" strokeWidth={1.5} />
                   <div>
-                    <p className="font-semibold text-sm text-white">Report to 1930</p>
-                    <p className="text-xs text-white/60">National Cyber Crime Helpline</p>
+                    <p className="font-semibold text-sm text-foreground">Report to 1930</p>
+                    <p className="text-xs text-muted-foreground">National Cyber Crime Helpline</p>
                   </div>
                 </div>
               )}
               {(check.recommendedActions ?? []).map((action, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-2.5 bg-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white/80"
+                  className="flex items-start gap-2.5 bg-background rounded-lg px-3.5 py-2.5 text-sm text-muted-foreground"
                 >
-                  <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-white/40 mt-1.5" />
+                  <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-muted-foreground/40 mt-1.5" />
                   {action}
                 </div>
               ))}
               <div className="pt-1 space-y-2">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
-                  className="w-full justify-start bg-white/10 text-white hover:bg-white/20 border-0 rounded-lg text-xs font-medium"
+                  className="w-full justify-start rounded-lg text-xs font-medium"
                   onClick={copyVerdict}
                 >
                   <Copy className="mr-2 h-3.5 w-3.5" />
                   Copy Verdict Details
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
-                  className="w-full justify-start bg-white/10 text-white hover:bg-white/20 border-0 rounded-lg text-xs font-medium"
+                  className="w-full justify-start rounded-lg text-xs font-medium"
                   onClick={() => {
                     if (navigator.share) {
                       navigator.share({
@@ -363,7 +363,7 @@ export default function Result() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-border p-5">
+          <div className="bg-card rounded-lg border border-border p-5">
             <h3 className="text-[13px] font-semibold text-muted-foreground mb-3">
               Golden Rules of Safety
             </h3>

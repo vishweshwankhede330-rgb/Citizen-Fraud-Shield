@@ -15,12 +15,12 @@ interface DashboardComplaint {
 }
 
 function getRiskBadgeClass(level: string) {
-  if (level === "High Risk") return "bg-[#FDECEA] text-[#B3261E] border-[#f5c6c4]";
-  if (level === "Low Risk") return "bg-[#E8F3EC] text-[#2D6A4F] border-[#a8c8b5]";
-  return "bg-[#FFF4E0] text-[#946800] border-[#f5de8a]";
+  if (level === "High Risk") return "bg-[#3A1418] text-[#FF6B6B] border-[#3A1418]";
+  if (level === "Low Risk") return "bg-[#10301F] text-[#4ADE80] border-[#10301F]";
+  return "bg-[#3A2E0F] text-[#FFC857] border-[#3A2E0F]";
 }
 
-// ── Access gate ───────────────────────────────────────────────────────────────
+// ── Access gate ───────────────────────────────────────────────────────────
 
 function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
   const [code, setCode] = useState("");
@@ -55,12 +55,12 @@ function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
   return (
     <div className="flex-1 flex items-center justify-center p-4 py-12">
       <div className="w-full max-w-md">
-        <div className="bg-white border border-border rounded-lg p-8 space-y-6">
+        <div className="bg-card border border-border rounded-lg p-8 space-y-6 shadow-card">
           {/* Header */}
           <div className="text-center space-y-2">
             <div className="flex justify-center mb-4">
-              <div className="w-14 h-14 bg-[#2C4A6B]/8 border border-[#2C4A6B]/20 rounded-lg flex items-center justify-center">
-                <ShieldAlert className="h-7 w-7 text-[#2C4A6B]" strokeWidth={1.5} />
+              <div className="w-14 h-14 bg-[#4A9EFF]/10 border border-[#4A9EFF]/20 rounded-lg flex items-center justify-center">
+                <ShieldAlert className="h-7 w-7 text-[#4A9EFF]" strokeWidth={1.5} />
               </div>
             </div>
             <h1 className="text-[22px] font-semibold text-foreground">
@@ -90,18 +90,18 @@ function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
                   setError(null);
                 }}
                 placeholder="Enter access code"
-                className={`w-full text-sm border rounded-lg px-3.5 py-2.5 bg-background focus:outline-none focus:ring-2 focus:ring-[#2C4A6B]/30 ${
-                  error ? "border-[#B3261E]" : "border-border"
+                className={`w-full text-sm border rounded-lg px-3.5 py-2.5 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${
+                  error ? "border-[#FF6B6B]" : "border-border"
                 }`}
               />
               {error && (
-                <p className="mt-1.5 text-xs text-[#B3261E] font-medium">{error}</p>
+                <p className="mt-1.5 text-xs text-[#FF6B6B] font-medium">{error}</p>
               )}
             </div>
             <Button
               type="submit"
               disabled={!code.trim() || loading}
-              className="w-full bg-[#2C4A6B] hover:bg-[#2C4A6B]/90 text-white rounded-lg"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
             >
               {loading ? "Verifying…" : "Access Dashboard"}
             </Button>
@@ -112,7 +112,7 @@ function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
   );
 }
 
-// ── Dashboard view ────────────────────────────────────────────────────────────
+// ── Dashboard view ────────────────────────────────────────────────────────
 
 function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => void }) {
   const [complaints, setComplaints] = useState<DashboardComplaint[] | null>(null);
@@ -151,7 +151,7 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-[28px] font-semibold text-foreground mb-1.5">
+          <h1 className="text-[30px] font-semibold text-foreground mb-1.5">
             Police Dashboard
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -183,14 +183,14 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
 
       {/* Stats bar */}
       {complaints !== null && (
-        <div className="bg-[#2C4A6B] text-white rounded-lg px-5 py-3.5 flex items-center gap-6">
+        <div className="bg-[#4A9EFF]/10 border border-[#4A9EFF]/20 text-foreground rounded-lg px-5 py-3.5 flex items-center gap-6">
           <div>
-            <p className="text-xs text-white/60 mb-0.5">Total Complaints</p>
-            <p className="text-2xl font-semibold">{complaints.length}</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Total Complaints</p>
+            <p className="text-2xl font-semibold text-foreground">{complaints.length}</p>
           </div>
           <div>
-            <p className="text-xs text-white/60 mb-0.5">High Risk</p>
-            <p className="text-2xl font-semibold text-[#f5a6a3]">
+            <p className="text-xs text-muted-foreground mb-0.5">High Risk</p>
+            <p className="text-2xl font-semibold text-[#FF6B6B]">
               {complaints.filter((c) => c.risk_level === "High Risk").length}
             </p>
           </div>
@@ -199,21 +199,21 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
 
       {/* Error */}
       {error && (
-        <div className="bg-[#FDECEA] border border-[#f5c6c4] rounded-lg p-4">
-          <p className="text-sm text-[#B3261E] font-medium">{error}</p>
+        <div className="bg-[#3A1418] border border-[#3A1418] rounded-lg p-4">
+          <p className="text-sm text-[#FF6B6B] font-medium">{error}</p>
         </div>
       )}
 
       {/* Loading */}
       {loading && complaints === null && (
-        <div className="bg-white border border-border rounded-lg p-8 text-center">
+        <div className="bg-card border border-border rounded-lg p-8 text-center">
           <p className="text-sm text-muted-foreground">Loading complaints…</p>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && complaints !== null && complaints.length === 0 && (
-        <div className="bg-white border border-border rounded-lg p-12 text-center">
+        <div className="bg-card border border-border rounded-lg p-12 text-center">
           <p className="text-muted-foreground text-sm">
             No complaints have been submitted yet.
           </p>
@@ -222,7 +222,7 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
 
       {/* Complaints table */}
       {complaints !== null && complaints.length > 0 && (
-        <div className="bg-white border border-border rounded-lg overflow-hidden">
+        <div className="bg-card border border-border rounded-lg overflow-hidden shadow-card">
           {/* Desktop table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-sm">
@@ -326,7 +326,7 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
   );
 }
 
-// ── Page root ─────────────────────────────────────────────────────────────────
+// ── Page root ─────────────────────────────────────────────────────────────
 
 export default function PoliceDashboard() {
   const [accessCode, setAccessCode] = useState<string | null>(null);

@@ -65,29 +65,29 @@ function getRiskStyle(level: "High" | "Low" | "Uncertain") {
   switch (level) {
     case "High":
       return {
-        icon: <ShieldAlert className="h-7 w-7 text-[#B3261E]" strokeWidth={1.5} />,
-        border: "border-[#f5c6c4]",
-        bg: "bg-[#FDECEA]",
-        text: "text-[#B3261E]",
-        badge: "bg-[#FDECEA] text-[#B3261E] border border-[#f5c6c4]",
+        icon: <ShieldAlert className="h-7 w-7 text-[#FF6B6B]" strokeWidth={1.5} />,
+        border: "border-[#3A1418]",
+        bg: "bg-[#3A1418]",
+        text: "text-[#FF6B6B]",
+        badge: "bg-[#3A1418] text-[#FF6B6B] border border-[#3A1418]",
         title: "High Risk Detected",
       };
     case "Uncertain":
       return {
-        icon: <AlertTriangle className="h-7 w-7 text-[#946800]" strokeWidth={1.5} />,
-        border: "border-[#f5de8a]",
-        bg: "bg-[#FFF4E0]",
-        text: "text-[#946800]",
-        badge: "bg-[#FFF4E0] text-[#946800] border border-[#f5de8a]",
+        icon: <AlertTriangle className="h-7 w-7 text-[#FFC857]" strokeWidth={1.5} />,
+        border: "border-[#3A2E0F]",
+        bg: "bg-[#3A2E0F]",
+        text: "text-[#FFC857]",
+        badge: "bg-[#3A2E0F] text-[#FFC857] border border-[#3A2E0F]",
         title: "Exercise Caution",
       };
     case "Low":
       return {
-        icon: <ShieldCheck className="h-7 w-7 text-[#2D6A4F]" strokeWidth={1.5} />,
-        border: "border-[#a8c8b5]",
-        bg: "bg-[#E8F3EC]",
-        text: "text-[#2D6A4F]",
-        badge: "bg-[#E8F3EC] text-[#2D6A4F] border border-[#a8c8b5]",
+        icon: <ShieldCheck className="h-7 w-7 text-[#4ADE80]" strokeWidth={1.5} />,
+        border: "border-[#10301F]",
+        bg: "bg-[#10301F]",
+        text: "text-[#4ADE80]",
+        badge: "bg-[#10301F] text-[#4ADE80] border border-[#10301F]",
         title: "Low Risk",
       };
   }
@@ -99,7 +99,7 @@ function AiBubble({ children, className = "" }: { children: React.ReactNode; cla
   return (
     <div className="flex justify-start">
       <div
-        className={`max-w-[85%] bg-white border border-[#E0DED8] rounded-lg p-4 text-sm text-foreground leading-relaxed ${className}`}
+        className={`max-w-[85%] bg-card border border-border rounded-lg p-4 text-sm text-foreground leading-relaxed ${className}`}
       >
         {children}
       </div>
@@ -110,7 +110,7 @@ function AiBubble({ children, className = "" }: { children: React.ReactNode; cla
 function UserBubble({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex justify-end">
-      <div className="max-w-[75%] bg-[#2C4A6B] rounded-lg p-4 text-sm text-white leading-relaxed whitespace-pre-wrap">
+      <div className="max-w-[75%] bg-[#1A3A5F] rounded-lg p-4 text-sm text-white leading-relaxed whitespace-pre-wrap">
         {children}
       </div>
     </div>
@@ -120,7 +120,7 @@ function UserBubble({ children }: { children: React.ReactNode }) {
 function TypingIndicator() {
   return (
     <div className="flex justify-start">
-      <div className="bg-white border border-[#E0DED8] rounded-lg px-4 py-3 flex items-center gap-1.5">
+      <div className="bg-card border border-border rounded-lg px-4 py-3 flex items-center gap-1.5">
         {[0, 150, 300].map((delay) => (
           <span
             key={delay}
@@ -171,7 +171,7 @@ function VerdictBubble({
   return (
     <div className="flex justify-start w-full">
       <div
-        className={`w-full bg-white border-2 ${style.border} rounded-lg p-6 space-y-5`}
+        className={`w-full bg-card border-2 ${style.border} rounded-lg p-6 space-y-5`}
       >
         {/* Header */}
         <div className="flex items-start gap-4">
@@ -243,27 +243,27 @@ function VerdictBubble({
 
         {/* High-risk reporting */}
         {isHighRisk && data.crime_category !== "Not a Recognized Scam Pattern" && (
-          <div className="rounded-lg border border-[#f5c6c4] bg-[#FDECEA] p-4 space-y-3">
-            <p className="text-[13px] font-semibold text-[#B3261E]">Report This Scam</p>
+          <div className="rounded-lg border border-[#3A1418] bg-[#3A1418] p-4 space-y-3">
+            <p className="text-[13px] font-semibold text-[#FF6B6B]">Report This Scam</p>
             <div className="space-y-2">
               <a
                 href="https://cybercrime.gov.in"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 bg-white border border-[#f5c6c4] rounded-lg px-4 py-2.5 text-sm font-semibold text-[#B3261E] hover:bg-[#FDECEA] transition-colors"
+                className="flex items-center gap-2.5 bg-[#212D3F] border border-[#3A1418] rounded-lg px-4 py-2.5 text-sm font-semibold text-[#FF6B6B] hover:bg-[#3A1418]/70 transition-colors"
               >
                 <ExternalLink className="h-4 w-4 flex-shrink-0" strokeWidth={1.5} />
                 Report to Cyber Crime Portal (cybercrime.gov.in)
               </a>
-              <div className="bg-white border border-[#f5c6c4] rounded-lg px-4 py-2.5">
+              <div className="bg-[#212D3F] border border-[#3A1418] rounded-lg px-4 py-2.5">
                 <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-[#B3261E] flex-shrink-0" strokeWidth={1.5} />
-                  <span className="text-sm font-bold text-[#B3261E]">Call 1930</span>
-                  <span className="text-xs bg-[#FDECEA] text-[#B3261E] px-2 py-0.5 rounded-lg font-medium">
+                  <Phone className="h-4 w-4 text-[#FF6B6B] flex-shrink-0" strokeWidth={1.5} />
+                  <span className="text-sm font-bold text-[#FF6B6B]">Call 1930</span>
+                  <span className="text-xs bg-[#3A1418] text-[#FF6B6B] px-2 py-0.5 rounded-lg font-medium">
                     National Cyber Fraud Helpline
                   </span>
                 </div>
-                <p className="text-xs text-[#B3261E]/80 pl-6 mt-1 leading-relaxed">
+                <p className="text-xs text-[#FF6B6B]/80 pl-6 mt-1 leading-relaxed">
                   Call 1930 immediately if you have already shared money or bank details.
                 </p>
               </div>
@@ -285,7 +285,7 @@ function VerdictBubble({
             {submitStatus === "idle" && (
               <Button
                 size="sm"
-                className="bg-[#2C4A6B] hover:bg-[#2C4A6B]/90 text-white rounded-lg text-xs"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
                 onClick={async () => {
                   setSubmitStatus("submitting");
                   setSubmitError(null);
@@ -326,14 +326,14 @@ function VerdictBubble({
             )}
 
             {submitStatus === "done" && (
-              <div className="flex items-start gap-2.5 bg-[#E8F3EC] border border-[#a8c8b5] rounded-lg px-4 py-3">
-                <CheckCircle className="h-4 w-4 text-[#2D6A4F] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+              <div className="flex items-start gap-2.5 bg-[#10301F] border border-[#10301F] rounded-lg px-4 py-3">
+                <CheckCircle className="h-4 w-4 text-[#4ADE80] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                 <div>
-                  <p className="text-sm font-semibold text-[#2D6A4F] mb-0.5">
+                  <p className="text-sm font-semibold text-[#4ADE80] mb-0.5">
                     Complaint submitted successfully.
                   </p>
                   {complaintId && (
-                    <p className="text-xs text-[#2D6A4F]/80">
+                    <p className="text-xs text-[#4ADE80]/80">
                       Complaint ID:{" "}
                       <span className="font-mono font-semibold">
                         {complaintId.slice(0, 8).toUpperCase()}
@@ -346,7 +346,7 @@ function VerdictBubble({
 
             {submitStatus === "error" && (
               <div className="space-y-2">
-                <p className="text-xs text-[#B3261E] font-medium">{submitError}</p>
+                <p className="text-xs text-[#FF6B6B] font-medium">{submitError}</p>
                 <Button
                   size="sm"
                   variant="outline"
@@ -812,7 +812,7 @@ export default function Check() {
               case "ai-error":
                 return (
                   <AiBubble key={msg.id}>
-                    <p className="text-[#B3261E] font-medium mb-1">Analysis Failed</p>
+                    <p className="text-[#FF6B6B] font-medium mb-1">Analysis Failed</p>
                     <p className="text-muted-foreground">{msg.message}</p>
                     <button
                       className="mt-2 text-xs text-primary underline underline-offset-2"
@@ -833,7 +833,7 @@ export default function Check() {
 
       {/* ── Input bar (sticky bottom) ──────────────── */}
       {!hasVerdict && (
-        <div className="bg-white border-t border-border sticky bottom-0">
+        <div className="bg-card border-t border-border sticky bottom-0">
           <div className="max-w-2xl mx-auto px-4 py-3 space-y-2.5">
             {/* City selector */}
             <div className="flex items-center gap-2">
@@ -850,7 +850,7 @@ export default function Check() {
                 }}
                 disabled={isAnalyzing}
                 className={`text-xs text-foreground border rounded-lg px-2 py-1 bg-background focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 ${
-                  cityError ? "border-[#B3261E] ring-1 ring-[#B3261E]" : "border-border"
+                  cityError ? "border-[#FF6B6B] ring-1 ring-[#FF6B6B]" : "border-border"
                 }`}
               >
                 <option value="" disabled>Select your city</option>
@@ -865,13 +865,13 @@ export default function Check() {
                 </span>
               )}
               {audioStatus === "recording" && (
-                <span className="ml-auto flex items-center gap-1.5 text-xs text-[#B3261E] font-medium">
-                  <span className="w-2 h-2 bg-[#B3261E] rounded-full animate-pulse" />
+                <span className="ml-auto flex items-center gap-1.5 text-xs text-[#FF6B6B] font-medium">
+                  <span className="w-2 h-2 bg-[#FF6B6B] rounded-full animate-pulse" />
                   Recording…
                 </span>
               )}
               {audioError && (
-                <span className="ml-auto text-xs text-[#B3261E]">{audioError}</span>
+                <span className="ml-auto text-xs text-[#FF6B6B]">{audioError}</span>
               )}
             </div>
 
@@ -894,19 +894,19 @@ export default function Check() {
                 }}
                 disabled={isAnalyzing}
                 className={`w-28 text-xs text-foreground border rounded-lg px-2 py-1 bg-background focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 ${
-                  pincodeError ? "border-[#B3261E] ring-1 ring-[#B3261E]" : "border-border"
+                  pincodeError ? "border-[#FF6B6B] ring-1 ring-[#FF6B6B]" : "border-border"
                 }`}
               />
             </div>
 
             {/* Validation errors */}
             {cityError && (
-              <p className="text-xs text-[#B3261E] font-medium -mt-1">
+              <p className="text-xs text-[#FF6B6B] font-medium -mt-1">
                 Please select your city to continue.
               </p>
             )}
             {pincodeError && (
-              <p className="text-xs text-[#B3261E] font-medium -mt-1">
+              <p className="text-xs text-[#FF6B6B] font-medium -mt-1">
                 Please enter your 6-digit pincode.
               </p>
             )}
@@ -944,7 +944,7 @@ export default function Check() {
                 disabled={isAnalyzing || audioStatus === "transcribing"}
                 className={`flex-shrink-0 w-9 h-9 rounded-lg border flex items-center justify-center transition-colors ${
                   audioStatus === "recording"
-                    ? "border-[#B3261E] bg-[#FDECEA] text-[#B3261E]"
+                    ? "border-[#FF6B6B] bg-[#3A1418] text-[#FF6B6B]"
                     : "border-border bg-background text-muted-foreground hover:text-foreground hover:bg-foreground/5"
                 } disabled:opacity-40 disabled:cursor-not-allowed`}
                 title={audioStatus === "recording" ? "Stop recording" : "Record audio"}

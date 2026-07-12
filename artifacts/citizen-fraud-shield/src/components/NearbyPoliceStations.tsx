@@ -151,7 +151,7 @@ export default function NearbyPoliceStations({
   const locationLabel = pincode ? `Pincode ${pincode}` : city;
 
   return (
-    <div className="rounded-lg border border-border bg-white p-5 space-y-4">
+    <div className="rounded-lg border border-border bg-card p-5 space-y-4">
       <h2 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
         <MapPin className="h-4 w-4 flex-shrink-0 text-primary" strokeWidth={1.5} />
         Nearby Police Stations
@@ -208,9 +208,9 @@ export default function NearbyPoliceStations({
                   center={[station.lat, station.lon]}
                   radius={8}
                   pathOptions={{
-                    fillColor: "#2C4A6B",
+                    fillColor: "#4A9EFF",
                     fillOpacity: 0.85,
-                    color: "#fff",
+                    color: "#0F1419",
                     weight: 2,
                   }}
                 >
@@ -250,7 +250,7 @@ export default function NearbyPoliceStations({
                   href={`https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lon}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-[#3D7A8A] hover:underline underline-offset-2 mt-0.5"
+                  className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-[#4A9EFF] hover:underline underline-offset-2 mt-0.5"
                 >
                   <Navigation className="h-3.5 w-3.5" strokeWidth={1.5} />
                   Get Directions

@@ -18,11 +18,11 @@ export default function History() {
   const getRiskIcon = (level: string) => {
     switch (level) {
       case "High Risk":
-        return <ShieldAlert className="h-4 w-4 text-[#B3261E]" strokeWidth={1.5} />;
+        return <ShieldAlert className="h-4 w-4 text-[#FF6B6B]" strokeWidth={1.5} />;
       case "Low Risk":
-        return <ShieldCheck className="h-4 w-4 text-[#2D6A4F]" strokeWidth={1.5} />;
+        return <ShieldCheck className="h-4 w-4 text-[#4ADE80]" strokeWidth={1.5} />;
       case "Uncertain":
-        return <AlertTriangle className="h-4 w-4 text-[#946800]" strokeWidth={1.5} />;
+        return <AlertTriangle className="h-4 w-4 text-[#FFC857]" strokeWidth={1.5} />;
       default:
         return null;
     }
@@ -31,11 +31,11 @@ export default function History() {
   const getRiskBadgeColor = (level: string) => {
     switch (level) {
       case "High Risk":
-        return "bg-[#FDECEA] text-[#B3261E] border-[#f5c6c4]";
+        return "bg-[#3A1418] text-[#FF6B6B] border-[#3A1418]";
       case "Low Risk":
-        return "bg-[#E8F3EC] text-[#2D6A4F] border-[#a8c8b5]";
+        return "bg-[#10301F] text-[#4ADE80] border-[#10301F]";
       case "Uncertain":
-        return "bg-[#FFF4E0] text-[#946800] border-[#f5de8a]";
+        return "bg-[#3A2E0F] text-[#FFC857] border-[#3A2E0F]";
       default:
         return "bg-background text-foreground border-border";
     }
@@ -47,7 +47,7 @@ export default function History() {
       <Suspense
         fallback={
           <div
-            className="rounded-lg border border-border bg-white flex items-center justify-center"
+            className="rounded-lg border border-border bg-card flex items-center justify-center"
             style={{ height: 420 }}
           >
             <p className="text-muted-foreground text-sm">Loading map…</p>
@@ -60,7 +60,7 @@ export default function History() {
       {/* History list */}
       <div>
         <div className="mb-6">
-          <h1 className="text-[28px] font-semibold text-foreground mb-1.5">
+          <h1 className="text-[30px] font-semibold text-foreground mb-1.5">
             Verification History
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -69,7 +69,7 @@ export default function History() {
         </div>
 
         {history.length === 0 ? (
-          <div className="bg-white border border-border rounded-lg p-12 text-center">
+          <div className="bg-card border border-border rounded-lg p-12 text-center">
             <div className="flex justify-center mb-4">
               <div className="w-14 h-14 bg-background border border-border rounded-lg flex items-center justify-center">
                 <HistoryIcon className="h-7 w-7 text-muted-foreground" strokeWidth={1.5} />
@@ -90,7 +90,7 @@ export default function History() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white border border-border rounded-lg overflow-hidden">
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
             <ul className="divide-y divide-border">
               {history.map((item) => (
                 <li key={item.id}>

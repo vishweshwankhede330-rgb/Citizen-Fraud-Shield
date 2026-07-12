@@ -52,22 +52,22 @@ export default function FraudHotspotMap() {
     let fillColor: string;
     let fillOpacity: number;
     if (ratio >= 0.7) {
-      fillColor = "#B3261E";
+      fillColor = "#FF6B6B";
       fillOpacity = 0.55 + intensity * 0.3;
     } else if (ratio >= 0.4) {
-      fillColor = "#946800";
+      fillColor = "#FFC857";
       fillOpacity = 0.5 + intensity * 0.25;
     } else {
-      fillColor = "#2D6A4F";
+      fillColor = "#4ADE80";
       fillOpacity = 0.45;
     }
 
-    return { radius, fillColor, fillOpacity, color: "#fff", weight: 1.5 };
+    return { radius, fillColor, fillOpacity, color: "#0F1419", weight: 1.5 };
   }
 
   return (
-    <div className="border border-border overflow-hidden rounded-lg bg-white">
-      <div className="bg-white px-6 py-5 border-b border-border">
+    <div className="border border-border overflow-hidden rounded-lg bg-card">
+      <div className="bg-card px-6 py-5 border-b border-border">
         <h2 className="text-[20px] font-semibold text-foreground">Fraud Hotspot Map</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Marker size and color reflect High Risk report concentration by city.
@@ -107,7 +107,7 @@ export default function FraudHotspotMap() {
                   <div className="text-sm font-sans min-w-[140px]">
                     <p className="font-semibold text-foreground mb-1">{stat.city}</p>
                     <p className="text-muted-foreground">Total checks: <span className="font-semibold text-foreground">{stat.total}</span></p>
-                    <p style={{ color: "#B3261E" }}>High Risk: <span className="font-semibold">{stat.highRisk}</span></p>
+                    <p style={{ color: "#FF6B6B" }}>High Risk: <span className="font-semibold">{stat.highRisk}</span></p>
                     {stat.total - stat.highRisk > 0 && (
                       <p className="text-muted-foreground">Other: {stat.total - stat.highRisk}</p>
                     )}
@@ -120,17 +120,17 @@ export default function FraudHotspotMap() {
       </div>
 
       {/* Legend */}
-      <div className="bg-white px-6 py-4 border-t border-border flex flex-wrap gap-4 text-xs text-muted-foreground">
+      <div className="bg-card px-6 py-4 border-t border-border flex flex-wrap gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 rounded-full bg-[#B3261E] opacity-80"></span>
+          <span className="inline-block w-3 h-3 rounded-full bg-[#FF6B6B] opacity-80"></span>
           High concentration (&ge;70% High Risk)
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 rounded-full bg-[#946800] opacity-80"></span>
+          <span className="inline-block w-3 h-3 rounded-full bg-[#FFC857] opacity-80"></span>
           Moderate concentration
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 rounded-full bg-[#2D6A4F] opacity-80"></span>
+          <span className="inline-block w-3 h-3 rounded-full bg-[#4ADE80] opacity-80"></span>
           Low concentration
         </span>
         <span className="flex items-center gap-1.5 ml-auto italic">

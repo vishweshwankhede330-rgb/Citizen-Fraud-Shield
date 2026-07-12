@@ -1,0 +1,38 @@
+Redesign the visual theme of "Citizen Fraud Shield" to a dark, professional, trustworthy theme. This is a styling-only change — do not alter page structure, navigation, or any existing functionality (Speech AI, Agentic flow, Nearby Police Stations, Fraud Hotspot Map, Police Dashboard, reporting section). Apply each stage below in order, and confirm each renders correctly before moving to the next.
+
+===========================================
+STAGE A — DARK COLOR SYSTEM
+===========================================
+Replace the current color palette with this dark theme (use exactly these values):
+- Page background: #0F1419 (near-black navy)
+- Card/section background: #1A2332 (dark slate)
+- Elevated card background (e.g. modals, badges): #212D3F
+- Primary text: #E8EAED (off-white, not pure white)
+- Secondary/muted text: #8B98A9
+- Primary accent (buttons, links, active nav): #4A9EFF (a clear, confident blue)
+- Borders/dividers: #2A3648
+- Risk badges only, keep readable on dark background: High Risk background #3A1418 text #FF6B6B, Uncertain background #3A2E0F text #FFC857, Low Risk background #10301F text #4ADE80
+
+===========================================
+STAGE B — TYPOGRAPHY (apply after confirming Stage A)
+===========================================
+- Import "Inter" from Google Fonts for all text — clean, modern, highly legible, used by serious fintech/security products
+- Heading weight: 600, Body weight: 400
+- Type scale: page titles 30px, section headings 20px, body text 16px, small labels/badges 13px with slightly increased letter-spacing (0.02em)
+
+===========================================
+STAGE C — DEPTH AND POLISH (apply after confirming Stage B)
+===========================================
+- Cards: 1px solid border in #2A3648, subtle shadow (0 4px 12px rgba(0,0,0,0.3)) for depth against the dark background
+- Corner radius: 8px on cards and buttons — not sharp, not overly rounded
+- Buttons: solid fill in the accent color (#4A9EFF) for primary actions, outline style (1px border, transparent background) for secondary actions
+- Add a subtle gradient on the top navbar and hero section only: linear-gradient from #0F1419 to #1A2332
+- Icons: keep existing icon set, but switch their color to #4A9EFF or #E8EAED depending on context, so they remain visible on dark backgrounds
+
+===========================================
+IMPORTANT — SCOPE LIMITING
+===========================================
+- Do not change layout, page structure, or navigation
+- Do not modify any existing functionality
+- Ensure all text remains clearly readable (sufficient contrast) against the new dark backgrounds — double check risk badges, buttons, and form inputs specifically, since these are the most likely to have contrast issues after a dark theme switch
+- Apply Stage A, confirm it renders correctly with readable text everywhere, THEN apply Stage B, confirm, THEN apply Stage C
