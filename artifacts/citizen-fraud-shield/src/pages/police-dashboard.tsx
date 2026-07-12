@@ -199,7 +199,7 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
 
       {/* Error */}
       {error && (
-        <div className="bg-[#3A1418] border border-[#3A1418] rounded-lg p-4">
+        <div className="bg-gradient-to-b from-[#3A1418] to-[#2A0F12] border border-[#3A1418] rounded-lg p-4">
           <p className="text-sm text-[#FF6B6B] font-medium">{error}</p>
         </div>
       )}

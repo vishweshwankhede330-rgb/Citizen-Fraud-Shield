@@ -243,7 +243,7 @@ function VerdictBubble({
 
         {/* High-risk reporting */}
         {isHighRisk && data.crime_category !== "Not a Recognized Scam Pattern" && (
-          <div className="rounded-lg border border-[#3A1418] bg-[#3A1418] p-4 space-y-3">
+          <div className="rounded-lg border border-[#3A1418] bg-gradient-to-b from-[#3A1418] to-[#2A0F12] p-4 space-y-3">
             <p className="text-[13px] font-semibold text-[#FF6B6B]">Report This Scam</p>
             <div className="space-y-2">
               <a
@@ -326,7 +326,7 @@ function VerdictBubble({
             )}
 
             {submitStatus === "done" && (
-              <div className="flex items-start gap-2.5 bg-[#10301F] border border-[#10301F] rounded-lg px-4 py-3">
+              <div className="flex items-start gap-2.5 bg-gradient-to-b from-[#10301F] to-[#1A4028] border border-[#10301F] rounded-lg px-4 py-3">
                 <CheckCircle className="h-4 w-4 text-[#4ADE80] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                 <div>
                   <p className="text-sm font-semibold text-[#4ADE80] mb-0.5">

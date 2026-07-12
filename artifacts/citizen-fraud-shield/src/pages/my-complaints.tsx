@@ -64,7 +64,7 @@ export default function MyComplaints() {
 
       {/* Error */}
       {error && (
-        <div className="bg-[#3A1418] border border-[#3A1418] rounded-lg p-5">
+        <div className="bg-gradient-to-b from-[#3A1418] to-[#2A0F12] border border-[#3A1418] rounded-lg p-5">
           <p className="text-sm text-[#FF6B6B] font-medium">{error}</p>
         </div>
       )}

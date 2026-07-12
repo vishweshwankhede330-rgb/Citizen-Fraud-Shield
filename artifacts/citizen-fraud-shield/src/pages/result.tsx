@@ -148,7 +148,7 @@ export default function Result() {
 
           {/* High-risk reporting section */}
           {isHighRisk && check.crimeCategory !== "Not a Recognized Scam Pattern" && (
-            <div className="rounded-lg border border-[#3A1418] bg-[#3A1418] p-5 space-y-4">
+            <div className="rounded-lg border border-[#3A1418] bg-gradient-to-b from-[#3A1418] to-[#2A0F12] p-5 space-y-4">
               <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#FF6B6B]">
                 <AlertTriangle className="h-4 w-4 flex-shrink-0" strokeWidth={1.5} />
                 Report This Scam
@@ -236,7 +236,7 @@ export default function Result() {
               )}
 
               {submitStatus === "done" && (
-                <div className="flex items-start gap-2.5 bg-[#10301F] border border-[#10301F] rounded-lg px-4 py-3">
+                <div className="flex items-start gap-2.5 bg-gradient-to-b from-[#10301F] to-[#1A4028] border border-[#10301F] rounded-lg px-4 py-3">
                   <CheckCircle className="h-4 w-4 text-[#4ADE80] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                   <div>
                     <p className="text-sm font-semibold text-[#4ADE80] mb-0.5">
@@ -316,7 +316,7 @@ export default function Result() {
             </h2>
             <div className="space-y-2.5">
               {isHighRisk && (
-                <div className="flex items-center gap-3 bg-[#3A1418] rounded-lg px-3.5 py-3">
+                <div className="flex items-center gap-3 bg-gradient-to-b from-[#3A1418] to-[#2A0F12] rounded-lg px-3.5 py-3">
                   <PhoneForwarded className="h-4 w-4 text-[#FF6B6B] flex-shrink-0" strokeWidth={1.5} />
                   <div>
                     <p className="font-semibold text-sm text-foreground">Report to 1930</p>
