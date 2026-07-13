@@ -17,17 +17,22 @@ const queryClient = new QueryClient();
 
 function Router() {
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/check" component={Check} />
-        <Route path="/result/:id" component={Result} />
-        <Route path="/history" component={History} />
-        <Route path="/my-complaints" component={MyComplaints} />
-        <Route path="/police-dashboard" component={PoliceDashboard} />
-        <Route component={NotFound} />
-      </Switch>
-    </Layout>
+    <Switch>
+      {/* Police Dashboard renders completely outside the citizen Layout */}
+      <Route path="/police-dashboard" component={PoliceDashboard} />
+      <Route>
+        <Layout>
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/check" component={Check} />
+            <Route path="/result/:id" component={Result} />
+            <Route path="/history" component={History} />
+            <Route path="/my-complaints" component={MyComplaints} />
+            <Route component={NotFound} />
+          </Switch>
+        </Layout>
+      </Route>
+    </Switch>
   );
 }
 

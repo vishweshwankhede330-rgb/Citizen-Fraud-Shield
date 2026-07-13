@@ -1,7 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
-import { ShieldAlert, LogOut, RefreshCw, Hash, MapPin, Calendar, Phone } from "lucide-react";
+import {
+  ShieldAlert,
+  LogOut,
+  RefreshCw,
+  Hash,
+  MapPin,
+  Calendar,
+  Phone,
+  X,
+  ArrowLeft,
+  Shield,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 
 interface DashboardComplaint {
   id: string;
@@ -19,6 +30,132 @@ function getRiskBadgeClass(level: string) {
   if (level === "High Risk") return "bg-[#3A1418] text-[#FF6B6B] border-[#3A1418]";
   if (level === "Low Risk") return "bg-[#10301F] text-[#4ADE80] border-[#10301F]";
   return "bg-[#3A2E0F] text-[#FFC857] border-[#3A2E0F]";
+}
+
+// ── Complaint detail modal ─────────────────────────────────────────────────
+
+function ComplaintDetail({
+  complaint,
+  onClose,
+}: {
+  complaint: DashboardComplaint;
+  onClose: () => void;
+}) {
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  return (
+    /* Backdrop */
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 p-4 py-8 overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="w-full max-w-2xl bg-card border border-border rounded-lg shadow-card">
+
+        {/* Modal header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <span
+              className={`inline-block px-2.5 py-0.5 rounded-lg text-xs font-semibold border ${getRiskBadgeClass(complaint.risk_level)}`}
+            >
+              {complaint.risk_level}
+            </span>
+            <span className="text-xs font-mono text-muted-foreground">
+              {complaint.id.toUpperCase()}
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {/* Modal body */}
+        <div className="p-6 space-y-5">
+
+          {/* Meta grid */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-background rounded-lg border border-border px-4 py-3">
+              <p className="text-xs text-muted-foreground mb-1">Crime Category</p>
+              <p className="text-sm font-medium text-foreground">
+                {complaint.crime_category ?? <span className="text-muted-foreground italic">Not categorised</span>}
+              </p>
+            </div>
+            <div className="bg-background rounded-lg border border-border px-4 py-3">
+              <p className="text-xs text-muted-foreground mb-1">Submitted</p>
+              <p className="text-sm font-medium text-foreground">
+                {format(new Date(complaint.submitted_at), "dd MMM yyyy, HH:mm")}
+              </p>
+            </div>
+            <div className="bg-background rounded-lg border border-border px-4 py-3">
+              <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                <MapPin className="h-3 w-3" strokeWidth={1.5} />
+                Location
+              </p>
+              <p className="text-sm font-medium text-foreground">
+                {[complaint.city, complaint.pincode].filter(Boolean).join(" · ") || (
+                  <span className="text-muted-foreground italic">Not provided</span>
+                )}
+              </p>
+            </div>
+            <div className="bg-background rounded-lg border border-border px-4 py-3">
+              <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                <Phone className="h-3 w-3" strokeWidth={1.5} />
+                Contact Number
+              </p>
+              <p className="text-sm font-medium text-foreground">
+                {complaint.phone_number ?? (
+                  <span className="text-muted-foreground italic">Not provided</span>
+                )}
+              </p>
+            </div>
+          </div>
+
+          {/* Full message */}
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
+              Full Message / Transcript
+            </p>
+            <div className="bg-background border border-border rounded-lg p-4 text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed max-h-64 overflow-y-auto">
+              {complaint.message_text}
+            </div>
+          </div>
+
+          {/* Session ID (for investigation reference) */}
+          <div className="bg-background border border-border rounded-lg px-4 py-3">
+            <p className="text-xs text-muted-foreground mb-1">Session Reference</p>
+            <p className="text-xs font-mono text-muted-foreground break-all">
+              {complaint.session_id}
+            </p>
+          </div>
+        </div>
+
+        {/* Modal footer */}
+        <div className="px-6 py-4 border-t border-border">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            className="rounded-lg text-xs"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.5} />
+            Back to Dashboard
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ── Access gate ───────────────────────────────────────────────────────────
@@ -57,7 +194,6 @@ function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
     <div className="flex-1 flex items-center justify-center p-4 py-12">
       <div className="w-full max-w-md">
         <div className="bg-card border border-border rounded-lg p-8 space-y-6 shadow-card">
-          {/* Header */}
           <div className="text-center space-y-2">
             <div className="flex justify-center mb-4">
               <div className="w-14 h-14 bg-[#4A9EFF]/10 border border-[#4A9EFF]/20 rounded-lg flex items-center justify-center">
@@ -72,7 +208,6 @@ function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
@@ -115,13 +250,23 @@ function AccessGate({ onAccess }: { onAccess: (code: string) => void }) {
 
 // ── Dashboard view ────────────────────────────────────────────────────────
 
-function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => void }) {
+function Dashboard({
+  accessCode,
+  loading,
+  onLoadingChange,
+  reloadTrigger,
+}: {
+  accessCode: string;
+  loading: boolean;
+  onLoadingChange: (v: boolean) => void;
+  reloadTrigger: number;
+}) {
   const [complaints, setComplaints] = useState<DashboardComplaint[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [selectedComplaint, setSelectedComplaint] = useState<DashboardComplaint | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true);
+    onLoadingChange(true);
     setError(null);
     try {
       const res = await fetch("/api/complaints/all", {
@@ -141,45 +286,24 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to load complaints.");
     } finally {
-      setLoading(false);
+      onLoadingChange(false);
     }
-  }, [accessCode]);
+  }, [accessCode, onLoadingChange]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { void load(); }, [load, reloadTrigger]);
 
   return (
     <div className="flex-1 max-w-6xl w-full mx-auto p-4 py-8 md:py-12 space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-[30px] font-semibold text-foreground mb-1.5">
-            Police Dashboard
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            All fraud complaints submitted by citizens — sorted by most recent first.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={load}
-            disabled={loading}
-            className="rounded-lg text-xs"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-            Refresh
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onExit}
-            className="rounded-lg text-xs text-muted-foreground"
-          >
-            <LogOut className="h-3.5 w-3.5 mr-1.5" />
-            Exit Dashboard
-          </Button>
-        </div>
+
+      {/* Page title + subtitle */}
+      <div>
+        <h1 className="text-[26px] font-semibold text-foreground mb-1">
+          Complaints
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          All fraud complaints submitted by citizens — sorted by most recent first.
+          Click any row to view full details.
+        </p>
       </div>
 
       {/* Stats bar */}
@@ -254,7 +378,12 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
               </thead>
               <tbody className="divide-y divide-border">
                 {complaints.map((c) => (
-                  <tr key={c.id} className="hover:bg-background/50 transition-colors">
+                  <tr
+                    key={c.id}
+                    className="hover:bg-background/70 transition-colors cursor-pointer"
+                    onClick={() => setSelectedComplaint(c)}
+                    title="Click to view full details"
+                  >
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground whitespace-nowrap">
                       {c.id.slice(0, 8).toUpperCase()}
                     </td>
@@ -277,9 +406,7 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
                       )}
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
-                      {formatDistanceToNow(new Date(c.submitted_at), {
-                        addSuffix: true,
-                      })}
+                      {formatDistanceToNow(new Date(c.submitted_at), { addSuffix: true })}
                     </td>
                     <td className="px-4 py-3 text-xs text-foreground max-w-xs">
                       <p className="line-clamp-2 leading-relaxed">{c.message_text}</p>
@@ -293,7 +420,11 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
           {/* Mobile cards */}
           <ul className="md:hidden divide-y divide-border">
             {complaints.map((c) => (
-              <li key={c.id} className="px-4 py-4 space-y-2">
+              <li
+                key={c.id}
+                className="px-4 py-4 space-y-2 cursor-pointer hover:bg-background/70 transition-colors active:bg-background"
+                onClick={() => setSelectedComplaint(c)}
+              >
                 <div className="flex items-start gap-2 flex-wrap">
                   <span
                     className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-semibold border ${getRiskBadgeClass(c.risk_level)}`}
@@ -332,23 +463,94 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
                     )}
                   </span>
                 </div>
+                <p className="text-xs text-[#4A9EFF]">Tap to view full details →</p>
               </li>
             ))}
           </ul>
         </div>
       )}
+
+      {/* Detail modal */}
+      {selectedComplaint && (
+        <ComplaintDetail
+          complaint={selectedComplaint}
+          onClose={() => setSelectedComplaint(null)}
+        />
+      )}
     </div>
   );
 }
 
-// ── Page root ─────────────────────────────────────────────────────────────
+// ── Page root — self-contained, no citizen Layout ─────────────────────────
 
 export default function PoliceDashboard() {
   const [accessCode, setAccessCode] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
 
-  if (!accessCode) {
-    return <AccessGate onAccess={setAccessCode} />;
-  }
+  return (
+    <div className="min-h-[100dvh] flex flex-col bg-background">
 
-  return <Dashboard accessCode={accessCode} onExit={() => setAccessCode(null)} />;
+      {/* Police-specific sticky header — no citizen nav links */}
+      <header
+        className="sticky top-0 z-40 border-b border-border"
+        style={{ background: "linear-gradient(to right, #0F1419, #1A2332)" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+            {/* Brand */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-7 h-7 rounded-lg border border-white/20 bg-white/10">
+                <Shield className="h-4 w-4 text-white" strokeWidth={1.5} />
+              </div>
+              <span className="font-semibold text-sm text-white">
+                Citizen Fraud Shield
+                <span className="text-white/50 mx-1.5">—</span>
+                Police Dashboard
+              </span>
+            </div>
+
+            {/* Action buttons — only shown when authenticated */}
+            {accessCode && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={loading}
+                  onClick={() => setReloadTrigger((t) => t + 1)}
+                  className="rounded-lg text-xs border-white/20 text-white/80 hover:text-white hover:bg-white/10 bg-transparent"
+                >
+                  <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
+                  Refresh
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setAccessCode(null)}
+                  className="rounded-lg text-xs border-white/20 text-white/70 hover:text-white hover:bg-white/10 bg-transparent"
+                >
+                  <LogOut className="h-3.5 w-3.5 mr-1.5" />
+                  Exit Dashboard
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Page body */}
+      <main className="flex-1 flex flex-col">
+        {!accessCode ? (
+          <AccessGate onAccess={setAccessCode} />
+        ) : (
+          <Dashboard
+            accessCode={accessCode}
+            loading={loading}
+            onLoadingChange={setLoading}
+            reloadTrigger={reloadTrigger}
+          />
+        )}
+      </main>
+    </div>
+  );
 }
