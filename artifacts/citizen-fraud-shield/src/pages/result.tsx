@@ -99,7 +99,7 @@ export default function Result() {
   };
 
   const validatePhone = (value: string) => {
-    if (value === "") return null; // optional
+    if (value === "") return "Phone number is required.";
     if (/^[6-9]\d{9}$/.test(value)) return null;
     return "Enter a valid 10-digit Indian mobile number (starting with 6–9).";
   };
@@ -289,12 +289,11 @@ export default function Result() {
                       htmlFor="phone-number"
                       className="block text-xs font-medium text-foreground mb-1"
                     >
-                      Your Phone Number{" "}
-                      <span className="text-muted-foreground font-normal">(optional)</span>
+                      Your Phone Number
                     </label>
                     <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
-                      This will only be visible to police, so they can contact you if
-                      needed regarding this complaint.
+                      Required so police can contact you directly regarding this complaint.
+                      This is only visible to police, not made public.
                     </p>
                     <input
                       id="phone-number"
