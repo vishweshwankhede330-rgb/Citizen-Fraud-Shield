@@ -91,12 +91,15 @@ export interface CheckResult {
   city?: City;
   crimeCategory?: string;
   pincode?: string;
+  /** Set after the user submits this result to the Police Dashboard. Persists across navigation. */
+  submittedComplaintId?: string;
 }
 
 interface StoreContextType {
   history: CheckResult[];
   addCheck: (check: Omit<CheckResult, "id" | "timestamp">) => string;
   getCheck: (id: string) => CheckResult | undefined;
+  markComplaintSubmitted: (checkId: string, complaintId: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -286,8 +289,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return history.find(c => c.id === id);
   };
 
+  const markComplaintSubmitted = (checkId: string, complaintId: string) => {
+    setHistory((prev) => {
+      const updated = prev.map((c) =>
+        c.id === checkId ? { ...c, submittedComplaintId: complaintId } : c,
+      );
+      localStorage.setItem("cfs_history_v3", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
-    <StoreContext.Provider value={{ history, addCheck, getCheck }}>
+    <StoreContext.Provider value={{ history, addCheck, getCheck, markComplaintSubmitted }}>
       {children}
     </StoreContext.Provider>
   );

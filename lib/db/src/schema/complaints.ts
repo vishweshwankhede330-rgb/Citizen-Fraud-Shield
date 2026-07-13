@@ -9,6 +9,7 @@ export const complaintsTable = pgTable("complaints", {
   city: text("city"),
   pincode: text("pincode"),
   resultId: text("result_id"),
+  phoneNumber: text("phone_number"),
   submittedAt: timestamp("submitted_at", { withTimezone: true }).defaultNow().notNull(),
 });
 

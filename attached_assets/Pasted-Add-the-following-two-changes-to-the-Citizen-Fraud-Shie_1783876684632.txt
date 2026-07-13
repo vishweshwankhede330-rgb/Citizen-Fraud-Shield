@@ -1,0 +1,33 @@
+Add the following two changes to the Citizen Fraud Shield app. Apply each part carefully — do not modify any other existing feature.
+
+===========================================
+PART 1 — FIX: DUPLICATE "SUBMIT TO POLICE DASHBOARD" BUTTON
+===========================================
+
+Bug: when a check has already been submitted to the Police Dashboard, revisiting that same result later (via History or My Complaints) still shows the "Submit to Police Dashboard" button as if it hasn't been submitted yet.
+
+Fix this:
+1. When a complaint is successfully submitted to the Police Dashboard, store this submission status (e.g., a "submitted: true" flag plus the complaint ID) linked to that specific check/result record
+2. When viewing a Result screen for a check that has already been submitted, do NOT show the "Submit to Police Dashboard" button again
+3. Instead, show a confirmation state: "Already submitted to Police Dashboard — Complaint ID: [ID]" using the same style as the current success message
+4. This should apply whether viewing the result immediately after submission, or later through History / My Complaints
+5. Test this by submitting a complaint, navigating away (e.g., to History), then coming back to that same result — confirm it now shows "Already submitted" instead of the button again
+
+===========================================
+PART 2 — ADD PHONE NUMBER TO POLICE DASHBOARD SUBMISSIONS
+===========================================
+
+Add a phone number field to the "Submit Complaint to Police Dashboard" flow.
+
+1. When the user clicks "Submit Complaint to Police Dashboard" on the Result screen, show a small form/prompt asking for their phone number before final submission — label it "Your Phone Number (optional)" with helper text: "This will only be visible to police, so they can contact you if needed regarding this complaint."
+2. Make this field optional, not required — the user can submit without it if they prefer not to share
+3. If provided, validate it's a reasonable 10-digit Indian phone number format before allowing submission
+4. Store this phone number along with the rest of the complaint data (message, risk level, city, pincode, timestamp, etc.)
+5. On the Police Dashboard, add a "Contact" column showing this phone number for each complaint (show "Not provided" if the user left it blank)
+
+DESIGN: Match the existing dark theme and form styling already used across the app.
+
+===========================================
+IMPORTANT — SCOPE LIMITING (applies to both parts)
+===========================================
+Do not modify any other part of the Result screen, submission flow, History, My Complaints, or Police Dashboard beyond what's described above.

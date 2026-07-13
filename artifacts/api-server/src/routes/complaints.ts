@@ -31,6 +31,7 @@ const submitSchema = z.object({
   city: z.string().optional(),
   pincode: z.string().optional(),
   result_id: z.string().optional(),
+  phone_number: z.string().regex(/^[6-9]\d{9}$/).optional(),
 });
 
 router.post("/complaints", async (req, res) => {
@@ -40,13 +41,13 @@ router.post("/complaints", async (req, res) => {
     return;
   }
 
-  const { session_id, message_text, risk_level, crime_category, city, pincode, result_id } =
+  const { session_id, message_text, risk_level, crime_category, city, pincode, result_id, phone_number } =
     parsed.data;
 
   try {
     const dbResult = await pool.query<{ id: string }>(
-      `INSERT INTO complaints (session_id, message_text, risk_level, crime_category, city, pincode, result_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO complaints (session_id, message_text, risk_level, crime_category, city, pincode, result_id, phone_number)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING id`,
       [
         session_id,
@@ -56,6 +57,7 @@ router.post("/complaints", async (req, res) => {
         city ?? null,
         pincode ?? null,
         result_id ?? null,
+        phone_number ?? null,
       ],
     );
     res.status(201).json({ id: dbResult.rows[0].id });
@@ -145,9 +147,10 @@ router.get("/complaints/all", async (req, res) => {
       crime_category: string | null;
       city: string | null;
       pincode: string | null;
+      phone_number: string | null;
       submitted_at: string;
     }>(
-      `SELECT id, session_id, message_text, risk_level, crime_category, city, pincode, submitted_at
+      `SELECT id, session_id, message_text, risk_level, crime_category, city, pincode, phone_number, submitted_at
        FROM complaints
        ORDER BY submitted_at DESC`,
     );

@@ -21,16 +21,26 @@ import { getSessionId } from "@/lib/session";
 
 export default function Result() {
   const [, params] = useRoute("/result/:id");
-  const { getCheck } = useStore();
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
+  const { getCheck, markComplaintSubmitted } = useStore();
+
+  // "phone_prompt" = showing the phone number form before final submit
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "phone_prompt" | "submitting" | "done" | "error"
+  >("idle");
   const [complaintId, setComplaintId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   const check = getCheck(params?.id || "");
 
   if (!check) {
     return <Redirect to="/history" />;
   }
+
+  // Persisted submission — survives navigation
+  const alreadySubmitted = !!check.submittedComplaintId;
+  const displayComplaintId = check.submittedComplaintId ?? complaintId;
 
   const getRiskConfig = (level: RiskLevel) => {
     switch (level) {
@@ -86,6 +96,51 @@ export default function Result() {
       ...(check.recommendedActions ?? []).map((a) => `• ${a}`),
     ].join("\n");
     navigator.clipboard.writeText(text).catch(() => {});
+  };
+
+  const validatePhone = (value: string) => {
+    if (value === "") return null; // optional
+    if (/^[6-9]\d{9}$/.test(value)) return null;
+    return "Enter a valid 10-digit Indian mobile number (starting with 6–9).";
+  };
+
+  const handleSubmit = async () => {
+    const err = validatePhone(phoneNumber);
+    if (err) {
+      setPhoneError(err);
+      return;
+    }
+    setSubmitStatus("submitting");
+    setSubmitError(null);
+    try {
+      const sessionId = getSessionId();
+      const body: Record<string, string> = {
+        session_id: sessionId,
+        message_text: check.query,
+        risk_level: check.riskLevel,
+        result_id: check.id,
+        ...(check.crimeCategory ? { crime_category: check.crimeCategory } : {}),
+        ...(check.city ? { city: check.city } : {}),
+        ...(check.pincode ? { pincode: check.pincode } : {}),
+        ...(phoneNumber ? { phone_number: phoneNumber } : {}),
+      };
+      const res = await fetch("/api/complaints", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = (await res.json()) as { id?: string; error?: string };
+      if (!res.ok || data.error) throw new Error(data.error ?? "Failed to submit.");
+      const newComplaintId = data.id ?? null;
+      setComplaintId(newComplaintId);
+      setSubmitStatus("done");
+      if (newComplaintId) {
+        markComplaintSubmitted(check.id, newComplaintId);
+      }
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to submit.");
+      setSubmitStatus("error");
+    }
   };
 
   return (
@@ -194,59 +249,19 @@ export default function Result() {
                 this complaint to the shared Police Dashboard.
               </p>
 
-              {submitStatus === "idle" && (
-                <Button
-                  size="sm"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
-                  onClick={async () => {
-                    setSubmitStatus("submitting");
-                    setSubmitError(null);
-                    try {
-                      const sessionId = getSessionId();
-                      const res = await fetch("/api/complaints", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          session_id: sessionId,
-                          message_text: check.query,
-                          risk_level: check.riskLevel,
-                          crime_category: check.crimeCategory,
-                          city: check.city,
-                          pincode: check.pincode,
-                          result_id: check.id,
-                        }),
-                      });
-                      const data = (await res.json()) as { id?: string; error?: string };
-                      if (!res.ok || data.error) throw new Error(data.error ?? "Failed to submit.");
-                      setComplaintId(data.id ?? null);
-                      setSubmitStatus("done");
-                    } catch (err: unknown) {
-                      setSubmitError(err instanceof Error ? err.message : "Failed to submit.");
-                      setSubmitStatus("error");
-                    }
-                  }}
-                >
-                  <Send className="mr-1.5 h-3.5 w-3.5" />
-                  Submit Complaint to Police Dashboard
-                </Button>
-              )}
-
-              {submitStatus === "submitting" && (
-                <p className="text-xs text-muted-foreground">Submitting…</p>
-              )}
-
-              {submitStatus === "done" && (
+              {/* Already submitted (persisted across navigation) or just submitted this session */}
+              {(alreadySubmitted || submitStatus === "done") && (
                 <div className="flex items-start gap-2.5 bg-gradient-to-b from-[#10301F] to-[#1A4028] border border-[#10301F] rounded-lg px-4 py-3">
                   <CheckCircle className="h-4 w-4 text-[#4ADE80] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                   <div>
                     <p className="text-sm font-semibold text-[#4ADE80] mb-0.5">
-                      Complaint submitted successfully.
+                      Already submitted to Police Dashboard.
                     </p>
-                    {complaintId && (
+                    {displayComplaintId && (
                       <p className="text-xs text-[#4ADE80]/80">
                         Complaint ID:{" "}
                         <span className="font-mono font-semibold">
-                          {complaintId.slice(0, 8).toUpperCase()}
+                          {displayComplaintId.slice(0, 8).toUpperCase()}
                         </span>
                       </p>
                     )}
@@ -254,14 +269,94 @@ export default function Result() {
                 </div>
               )}
 
-              {submitStatus === "error" && (
+              {/* Idle — show button */}
+              {!alreadySubmitted && submitStatus === "idle" && (
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
+                  onClick={() => setSubmitStatus("phone_prompt")}
+                >
+                  <Send className="mr-1.5 h-3.5 w-3.5" />
+                  Submit Complaint to Police Dashboard
+                </Button>
+              )}
+
+              {/* Phone number prompt */}
+              {!alreadySubmitted && submitStatus === "phone_prompt" && (
+                <div className="space-y-3">
+                  <div>
+                    <label
+                      htmlFor="phone-number"
+                      className="block text-xs font-medium text-foreground mb-1"
+                    >
+                      Your Phone Number{" "}
+                      <span className="text-muted-foreground font-normal">(optional)</span>
+                    </label>
+                    <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
+                      This will only be visible to police, so they can contact you if
+                      needed regarding this complaint.
+                    </p>
+                    <input
+                      id="phone-number"
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={phoneNumber}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "");
+                        setPhoneNumber(val);
+                        setPhoneError(null);
+                      }}
+                      placeholder="e.g. 9876543210"
+                      className={`w-full text-sm border rounded-lg px-3.5 py-2.5 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${
+                        phoneError ? "border-[#FF6B6B]" : "border-border"
+                      }`}
+                    />
+                    {phoneError && (
+                      <p className="mt-1.5 text-xs text-[#FF6B6B] font-medium">
+                        {phoneError}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
+                      onClick={handleSubmit}
+                    >
+                      <Send className="mr-1.5 h-3.5 w-3.5" />
+                      Submit Complaint
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="rounded-lg text-xs"
+                      onClick={() => {
+                        setSubmitStatus("idle");
+                        setPhoneNumber("");
+                        setPhoneError(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Submitting */}
+              {!alreadySubmitted && submitStatus === "submitting" && (
+                <p className="text-xs text-muted-foreground">Submitting…</p>
+              )}
+
+              {/* Error */}
+              {!alreadySubmitted && submitStatus === "error" && (
                 <div className="space-y-2">
                   <p className="text-xs text-[#FF6B6B] font-medium">{submitError}</p>
                   <Button
                     size="sm"
                     variant="outline"
                     className="rounded-lg text-xs"
-                    onClick={() => setSubmitStatus("idle")}
+                    onClick={() => setSubmitStatus("phone_prompt")}
                   >
                     Try Again
                   </Button>

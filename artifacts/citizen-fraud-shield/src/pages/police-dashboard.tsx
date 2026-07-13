@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ShieldAlert, LogOut, RefreshCw, Hash, MapPin, Calendar } from "lucide-react";
+import { ShieldAlert, LogOut, RefreshCw, Hash, MapPin, Calendar, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 
@@ -11,6 +11,7 @@ interface DashboardComplaint {
   crime_category: string | null;
   city: string | null;
   pincode: string | null;
+  phone_number: string | null;
   submitted_at: string;
 }
 
@@ -241,6 +242,9 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
                     Location
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
+                    Contact
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
                     Submitted
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
@@ -266,6 +270,11 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
                       {[c.city, c.pincode].filter(Boolean).join(" · ") || "—"}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
+                      {c.phone_number ?? (
+                        <span className="italic text-muted-foreground/50">Not provided</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
                       {formatDistanceToNow(new Date(c.submitted_at), {
@@ -315,6 +324,12 @@ function Dashboard({ accessCode, onExit }: { accessCode: string; onExit: () => v
                   <span className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" strokeWidth={1.5} />
                     {formatDistanceToNow(new Date(c.submitted_at), { addSuffix: true })}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Phone className="h-3 w-3" strokeWidth={1.5} />
+                    {c.phone_number ?? (
+                      <span className="italic text-muted-foreground/50">Not provided</span>
+                    )}
                   </span>
                 </div>
               </li>
