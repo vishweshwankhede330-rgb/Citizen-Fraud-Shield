@@ -1,0 +1,24 @@
+Two bugs need fixing. Both were previously fixed but appear to have regressed after a fresh project import — please investigate root causes, not just symptoms.
+
+===========================================
+BUG 1 — NEARBY POLICE STATIONS MISSING ON LIVE RESULT SCREEN
+===========================================
+On the live Result screen (shown immediately after submitting a check), the "Nearby Police Stations" section shows "No listed stations found" for a given pincode. But when the SAME complaint is later viewed through History, it correctly shows real nearby police stations for that same pincode.
+
+Fix this:
+1. Check whether the live Result screen and the History detail view use the same pincode-to-coordinates lookup and Overpass API query logic
+2. Check for a timing issue: is the live Result screen querying before the pincode-to-coordinates lookup finishes, or timing out too early?
+3. Add a proper loading state ("Searching for nearby stations...") while the query is in progress on the live screen, and only show "No listed stations found" if the completed query genuinely returns zero results
+4. Test with pincode 440013 on a fresh submission and confirm real stations now appear immediately, matching the History view
+
+===========================================
+BUG 2 — "SUBMIT TO POLICE DASHBOARD" BUTTON REAPPEARS AFTER ALREADY SUBMITTING
+===========================================
+After a complaint has already been submitted to the Police Dashboard (confirmed by a Complaint ID shown), revisiting that same complaint later through My History still shows the "Submit to Police Dashboard" button as if it hasn't been submitted.
+
+Fix this:
+1. Confirm the submission status (submitted: true + complaint ID) is being stored and linked to that specific check record when a complaint is submitted
+2. When viewing a Result screen for a check that has already been submitted — whether live or via History — show "Already submitted to Police Dashboard — Complaint ID: [ID]" instead of the submit button
+3. Test by submitting a complaint, navigating to My History, opening that same complaint, and confirming it shows "Already submitted" instead of the button
+
+Report back what was found causing each regression, and confirm both fixes with fresh tests.

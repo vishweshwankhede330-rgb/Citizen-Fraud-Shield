@@ -63,6 +63,8 @@ export default function NearbyPoliceStations({
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [center, setCenter] = useState<[number, number]>(CITY_COORDS[city] ?? INDIA_CENTRE);
+  // Incrementing this triggers a retry by changing the effect dependency.
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -145,11 +147,12 @@ export default function NearbyPoliceStations({
     void run();
 
     return () => controller.abort();
-  }, [city, pincode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [city, pincode, retryKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Distinguish between a fetch error and genuinely zero results — these need
+  // different UI: an error can be retried, but zero results is a real answer.
   const noResults =
     !loading && !fetchError && stations !== null && stations.length === 0;
-  const showFallback = fetchError || noResults;
 
   const locationLabel = pincode ? `Pincode ${pincode}` : city;
 
@@ -178,7 +181,23 @@ export default function NearbyPoliceStations({
         </p>
       )}
 
-      {showFallback && (
+      {/* Fetch error — show retry option, NOT "no stations found" */}
+      {!loading && fetchError && (
+        <div className="flex items-center gap-3">
+          <p className="text-sm text-muted-foreground">
+            Couldn't reach station data right now.
+          </p>
+          <button
+            onClick={() => setRetryKey((k) => k + 1)}
+            className="text-xs font-semibold text-primary hover:underline underline-offset-2 flex-shrink-0"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
+      {/* Only show "no results" when the query genuinely returned zero stations */}
+      {!loading && !fetchError && noResults && (
         <p className="text-sm text-muted-foreground">
           No listed stations found — please use the Cyber Crime Portal link
           above, or dial{" "}

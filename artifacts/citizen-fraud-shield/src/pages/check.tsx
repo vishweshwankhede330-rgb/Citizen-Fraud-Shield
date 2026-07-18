@@ -149,10 +149,17 @@ function VerdictBubble({
   pincode?: string;
   onNewCheck: () => void;
 }) {
+  const { getCheck, markComplaintSubmitted } = useStore();
   const style = getRiskStyle(data.risk_level);
   const isHighRisk = data.risk_level === "High";
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
-  const [complaintId, setComplaintId] = useState<string | null>(null);
+
+  // Initialise from the persisted store so the bubble correctly shows
+  // "already submitted" if the user submits here and then revisits later.
+  const persistedComplaintId = getCheck(savedId)?.submittedComplaintId ?? null;
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "done" | "error">(
+    persistedComplaintId ? "done" : "idle",
+  );
+  const [complaintId, setComplaintId] = useState<string | null>(persistedComplaintId);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const copyVerdict = () => {
@@ -309,8 +316,14 @@ function VerdictBubble({
                     });
                     const json = (await res.json()) as { id?: string; error?: string };
                     if (!res.ok || json.error) throw new Error(json.error ?? "Failed to submit.");
-                    setComplaintId(json.id ?? null);
+                    const newComplaintId = json.id ?? null;
+                    setComplaintId(newComplaintId);
                     setSubmitStatus("done");
+                    // Persist to the store so History / result page shows
+                    // "Already submitted" instead of the submit button again.
+                    if (newComplaintId) {
+                      markComplaintSubmitted(savedId, newComplaintId);
+                    }
                   } catch (err: unknown) {
                     setSubmitError(err instanceof Error ? err.message : "Failed to submit.");
                     setSubmitStatus("error");
