@@ -156,11 +156,59 @@ function VerdictBubble({
   // Initialise from the persisted store so the bubble correctly shows
   // "already submitted" if the user submits here and then revisits later.
   const persistedComplaintId = getCheck(savedId)?.submittedComplaintId ?? null;
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "done" | "error">(
-    persistedComplaintId ? "done" : "idle",
-  );
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "phone_prompt" | "submitting" | "done" | "error"
+  >(persistedComplaintId ? "done" : "idle");
   const [complaintId, setComplaintId] = useState<string | null>(persistedComplaintId);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  const validatePhone = (value: string) => {
+    if (value === "") return "Phone number is required.";
+    if (/^[6-9]\d{9}$/.test(value)) return null;
+    return "Enter a valid 10-digit Indian mobile number (starting with 6–9).";
+  };
+
+  const handleSubmit = async () => {
+    const err = validatePhone(phoneNumber);
+    if (err) {
+      setPhoneError(err);
+      return;
+    }
+    setSubmitStatus("submitting");
+    setSubmitError(null);
+    try {
+      const sessionId = getSessionId();
+      const res = await fetch("/api/complaints", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: sessionId,
+          message_text: data.simple_explanation
+            ? `${data.simple_explanation}`
+            : "(no explanation)",
+          risk_level: mapRiskLevel(data.risk_level),
+          crime_category: data.crime_category,
+          city: city,
+          pincode: pincode,
+          result_id: savedId,
+          phone_number: phoneNumber,
+        }),
+      });
+      const json = (await res.json()) as { id?: string; error?: string };
+      if (!res.ok || json.error) throw new Error(json.error ?? "Failed to submit.");
+      const newComplaintId = json.id ?? null;
+      setComplaintId(newComplaintId);
+      setSubmitStatus("done");
+      if (newComplaintId) {
+        markComplaintSubmitted(savedId, newComplaintId);
+      }
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to submit.");
+      setSubmitStatus("error");
+    }
+  };
 
   const copyVerdict = () => {
     const text = [
@@ -290,49 +338,77 @@ function VerdictBubble({
               this complaint to the shared Police Dashboard.
             </p>
 
+            {/* Step 1 — initial button */}
             {submitStatus === "idle" && (
               <Button
                 size="sm"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
-                onClick={async () => {
-                  setSubmitStatus("submitting");
-                  setSubmitError(null);
-                  try {
-                    const sessionId = getSessionId();
-                    const res = await fetch("/api/complaints", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        session_id: sessionId,
-                        message_text: data.simple_explanation
-                          ? `${data.simple_explanation}`
-                          : "(no explanation)",
-                        risk_level: mapRiskLevel(data.risk_level),
-                        crime_category: data.crime_category,
-                        city: city,
-                        pincode: pincode,
-                        result_id: savedId,
-                      }),
-                    });
-                    const json = (await res.json()) as { id?: string; error?: string };
-                    if (!res.ok || json.error) throw new Error(json.error ?? "Failed to submit.");
-                    const newComplaintId = json.id ?? null;
-                    setComplaintId(newComplaintId);
-                    setSubmitStatus("done");
-                    // Persist to the store so History / result page shows
-                    // "Already submitted" instead of the submit button again.
-                    if (newComplaintId) {
-                      markComplaintSubmitted(savedId, newComplaintId);
-                    }
-                  } catch (err: unknown) {
-                    setSubmitError(err instanceof Error ? err.message : "Failed to submit.");
-                    setSubmitStatus("error");
-                  }
-                }}
+                onClick={() => setSubmitStatus("phone_prompt")}
               >
                 <Send className="mr-1.5 h-3.5 w-3.5" />
                 Submit Complaint to Police Dashboard
               </Button>
+            )}
+
+            {/* Step 2 — phone number collection */}
+            {submitStatus === "phone_prompt" && (
+              <div className="space-y-3">
+                <div>
+                  <label
+                    htmlFor="vb-phone-number"
+                    className="block text-xs font-medium text-foreground mb-1"
+                  >
+                    Your Phone Number
+                  </label>
+                  <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
+                    Required so police can contact you directly regarding this complaint.
+                    This is only visible to police, not made public.
+                  </p>
+                  <input
+                    id="vb-phone-number"
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "");
+                      setPhoneNumber(val);
+                      setPhoneError(null);
+                    }}
+                    placeholder="e.g. 9876543210"
+                    className={`w-full text-sm border rounded-lg px-3.5 py-2.5 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${
+                      phoneError ? "border-[#FF6B6B]" : "border-border"
+                    }`}
+                  />
+                  {phoneError && (
+                    <p className="mt-1.5 text-xs text-[#FF6B6B] font-medium">
+                      {phoneError}
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs"
+                    onClick={handleSubmit}
+                  >
+                    <Send className="mr-1.5 h-3.5 w-3.5" />
+                    Submit Complaint
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="rounded-lg text-xs"
+                    onClick={() => {
+                      setSubmitStatus("idle");
+                      setPhoneNumber("");
+                      setPhoneError(null);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
             )}
 
             {submitStatus === "submitting" && (
@@ -365,7 +441,7 @@ function VerdictBubble({
                   size="sm"
                   variant="outline"
                   className="rounded-lg text-xs"
-                  onClick={() => setSubmitStatus("idle")}
+                  onClick={() => setSubmitStatus("phone_prompt")}
                 >
                   Try Again
                 </Button>
